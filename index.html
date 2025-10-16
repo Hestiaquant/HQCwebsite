@@ -12,13 +12,13 @@
         /* 視覺風格：採用 Lora 與 思源宋體 作為核心字體 */
         body {
             font-family: 'Lora', 'Noto Serif TC', serif;
-            background-color: #121212;
+            background-color: #171512; 
             color: #EAE7E0;
         }
         h1, h2, h3, h4, h5, h6 {
             font-family: inherit;
         }
-        .bg-brand-black { background-color: #171512;; }
+        .bg-brand-black { background-color: #171512; } 
         .bg-brand-dark { background-color: #1a1a1a; }
         .text-brand-beige { color: #EAE7E0; }
         .text-brand-gold { color: #D4AF37; }
@@ -65,11 +65,9 @@
                     赫斯提亞量化教育學院
                 </h1>
                 <p class="mt-6 text-xl md:text-2xl text-brand-beige max-w-3xl mx-auto">
-                    擺脫市場情緒的束縛，建立屬於你的理性交易</p>
-                <p class="mt-6 text-xl md:text-2xl text-brand-beige max-w-3xl mx-auto">
-                    我們專注於可驗證的量化系統，培養真正的量化交易者
+                    擺脫市場情緒的束縛，建立屬於你的理性交易。我們專注於可驗證的量化系統，培養真正的量化交易者。
                 </p>
-                <a href="#blueprint" class="mt-12 inline-block bg-brand-gold text-brand-black font-bold text-lg px-8 py-4 rounded-lg shadow-lg shadow-brand-gold/20 hover:bg-brand-gold/90 transition-all duration-300 transform hover:scale-105">
+                <a href="#blueprint" class="mt-12 inline-block bg-brand-gold text-brand-black font-bold text-lg px-8 py-4 rounded-lg shadow-lg shadow-brand-gold/20 hover-bg-brand-gold/90 transition-all duration-300 transform hover:scale-105">
                     探索我們的教學體系
                 </a>
             </div>
@@ -84,26 +82,21 @@
                     <p class="mt-4 text-lg text-brand-beige/80">穩定、核心、紀律 —— 教學體系的三大基石</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-10 text-center">
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300">
-                        <div class="text-5xl text-brand-gold mb-4"><img src="images/1.png"></div>
+                    <!-- [版面修正] 移除包覆圖片的 div，直接為 img 標籤設定大小與置中 -->
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/1.png" alt="絕對核心的系統圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">絕對核心的系統</h3>
-                        <p class="text-brand-beige/70">協助您建立並信賴這個核心系統</p>
-                        <p class="text-brand-beige/70">如同赫斯提亞守護的聖火</p>
-                        <p class="text-brand-beige/70">交易系統應是永不熄滅、始終如一的核心</p>
+                        <p class="text-brand-beige/70">如同赫斯提亞守護的聖火，交易系統應是永不熄滅、始終如一的核心。協助您建立並信賴這個核心系統。</p>
                     </div>
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300">
-                         <div class="text-5xl text-brand-gold mb-4"><img src="images/2.png"></div>
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/2.png" alt="內在精神的穩定圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">內在精神的穩定</h3>
-                        <p class="text-brand-beige/70">市場充滿混亂，內心必須如同爐火般溫暖而穩定</p>
-                        <p class="text-brand-beige/70">我們不僅關乎策略</p>
-                        <p class="text-brand-beige/70">更關乎心理韌性</p>
+                        <p class="text-brand-beige/70">市場充滿混亂，內心必須如同爐火般溫暖而穩定。我們不僅關乎策略，更關乎心理韌性。</p>
                     </div>
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300">
-                         <div class="text-5xl text-brand-gold mb-4"><img src="images/4.png"></div>
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/4.png" alt="紀律的堅實守護圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">紀律的堅實守護</h3>
-                        <p class="text-brand-beige/70">真正的自由來自於絕對的紀律</p>
-                        <p class="text-brand-beige/70">赫斯提亞是家庭的守護神</p>
-                        <p class="text-brand-beige/70">而紀律則是您交易帳戶的唯一守護者</p>
+                        <p class="text-brand-beige/70">真正的自由來自於絕對的紀律。赫斯提亞是家庭的守護神，而紀律則是您交易帳戶的唯一守護者。</p>
                     </div>
                 </div>
             </div>
@@ -137,33 +130,26 @@
                     <p class="mt-4 text-lg text-brand-beige/80">我們如何系統化地鍛造一位硬核交易者</p>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300">
-                        <div class="text-5xl text-brand-gold mb-4"><img src="images/3.png"></div>
+                    <!-- [版面修正] 移除包覆圖片的 div，直接為 img 標籤設定大小與置中 -->
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/3.png" alt="系統思維鍛造圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">系統思維鍛造</h3>
-                        <p class="text-brand-beige/70">學習以機率與期望值的視角看待市場</p>
-                        <p class="text-brand-beige/70">建立清晰的量化世界觀</p>
-                        <p class="text-brand-beige/70">擺脫散戶的思維框架</p>
+                        <p class="text-brand-beige/70">學習以機率與期望值的視角看待市場，建立清晰的量化世界觀，擺脫散戶的思維框架。</p>
                     </div>
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300">
-                        <div class="text-5xl text-brand-gold mb-4"><img src="images/5.png"></div>
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/5.png" alt="回測數據科學圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">回測數據科學</h3>
-                        <p class="text-brand-beige/70">將交易想法轉化為可驗證的程式碼</p>
-                        <p class="text-brand-beige/70">透過嚴謹的歷史數據回測</p>
-                        <p class="text-brand-beige/70">將「感覺」變成「科學」。</p>
+                        <p class="text-brand-beige/70">將交易想法轉化為可驗證的程式碼，透過嚴謹的歷史數據回測，將「感覺」變成「科學」。</p>
                     </div>
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300">
-                        <div class="text-5xl text-brand-gold mb-4"><img src="images/6.png"></div>
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/6.png" alt="實戰風險管理圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">實戰風險管理</h3>
-                        <p class="text-brand-beige/70">部位控制、資金管理與風險暴露模型</p>
-                        <p class="text-brand-beige/70">學習如何在市場中長期存活</p>
-                        <p class="text-brand-beige/70">而非追求一夜暴富。</p>
+                        <p class="text-brand-beige/70">部位控制、資金管理與風險暴露模型，學習如何在市場中長期存活，而非追求一夜暴富。</p>
                     </div>
-                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300">
-                        <div class="text-5xl text-brand-gold mb-4"><img src="images/7.png"></div>
+                    <div class="bg-brand-black p-8 rounded-xl border border-gray-800 text-center hover:border-brand-gold/50 transition-all duration-300 flex flex-col items-center">
+                        <img src="images/7.png" alt="交易心理韌性圖示" class="w-20 h-20 mb-6">
                         <h3 class="text-2xl font-semibold text-brand-beige mb-3">交易心理韌性</h3>
-                        <p class="text-brand-beige/70">理解並克服交易中的心理偏誤</p>
-                        <p class="text-brand-beige/70">鍛鍊強大的執行紀律</p>
-                        <p class="text-brand-beige/70">讓系統保護你免於情緒的干擾。</p>
+                        <p class="text-brand-beige/70">理解並克服交易中的心理偏誤，鍛鍊強大的執行紀律，讓系統保護你免於情緒的干擾。</p>
                     </div>
                 </div>
             </div>
@@ -181,50 +167,39 @@
                         查看我們在社群上的最新貼文
                     </p>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <!-- 範例 1: 請將 href 與 src 中的 placeholder 替換成您的連結 -->
                         <a href="https://www.instagram.com/p/DO8bC39Dztf" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/552112461_17846004174572140_7493366537819819125_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=109&ig_cache_key=MzcyNzk3MzUzNjMzMDg5MDA3OQ%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTA4MC5zZHIuQzMifQ%3D%3D&_nc_ohc=dl7y4abLR5kQ7kNvwFkdA6g&_nc_oc=AdlSBq0-2Ned5K0A7Wo4GJaL9STapQ10jXdtM5eKMJ1VqwyOB5mdEydXUpFNZs1TGxnksQFN5iUW79g0C4VAdxZ9&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_AfcK4QPaGEdPohVMzh3qmJqxQRc1Pslfsy4_ZTNJDDKSuA&oe=68F2D984" alt="H.Q.C. 貼文縮圖 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 2 -->
                         <a href="https://www.instagram.com/p/DPOcavpEc2e/" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/556945900_17847452331572140_6816237122773456062_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=101&ig_cache_key=MzczMzA0NjEyNDMwMDMyNDI1NA%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=uAii_gFvDjMQ7kNvwE4SIYA&_nc_oc=Adn9l33R202ACMuvxriHF17PPv4SjouiOAqTa1siRaa-ximEF3irYy4VqbafV0s-jC7kTyrK8GEGbzp76NIYdjaI&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_AfeAw9kP5O2KvZAbZaCr4PGm-7eoytQk1ZGpFAV1Gyzi5g&oe=68F2FEF7" alt="H.Q.C. 貼文縮圖 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 3 -->
-                         <a href="https://www.instagram.com/p/DPgeWxbjwGt/" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="https://www.instagram.com/p/DPgeWxbjwGt/" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/559731791_17848803639572140_3451121220574303030_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=MzczODEyMTE5NzAxNzAzOTI3Nw%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=Ajt4f6t5MdAQ7kNvwGr0VOU&_nc_oc=AdnPxPPJWNS0ynP4P5cvW9lSXjG7wbx7DN35Fe60hfS5jUiCyKGynA7cwmJ7SQC2p_othEJ2-llWP42cdSaKGLZv&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_AffvTL-TCt_d5WxAFqPXehzePtTbMu-2yRWreYx562ys2Q&oe=68F2EC2D" alt="H.Q.C. 貼文縮圖 3" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 4 -->
-                         <a href="https://www.instagram.com/p/DPoSZx0DzNp/" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="https://www.instagram.com/p/DPoSZx0DzNp/" target="_blank" rel="noopener noreferrer" class="block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/562799299_17849206443572140_6530279772289089194_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=102&ig_cache_key=Mzc0MDMyMDQyNjg0MjA3NjAwOQ%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=g4sQd5h5TDQQ7kNvwEcEbMq&_nc_oc=AdlJ9C40Hl-czr2PC3n8THsxd6wGObUz83ewOs7Lq6vskFbkd-IyNIKlIguoMkFw7WkB0lkJtzpWwfS8B3hlAMXO&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_Aff7lafE7kIlntxK2TUP8Z_PXP26sAduQri7cKb4Qf98lA&oe=68F2C978" alt="H.Q.C. 貼文縮圖 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 5 (平板以上顯示) -->
-                         <a href="https://www.instagram.com/p/DPD3wWWj05d/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden md:block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="https://www.instagram.com/p/DPD3wWWj05d/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden md:block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/554242175_17846616987572140_1378509502926971011_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=MzczMDA3MDExMjk5ODIwOTMwNw%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=RhAN0xz9GBQQ7kNvwFmyE4c&_nc_oc=AdmwNvpBS_hwYOrwi4bkmkw2Ro0-of5OgphBCLHNVsp0oXpEPSB4m70OSNtny4le3HrfvHrOW2Lo6Ul-l04Rb2CO&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_AffI5Ll6y_GjylsfW3VqpdSTnnNwgjlbKJlJ4iYYhWAXnw&oe=68F2D79A" alt="H.Q.C. 貼文縮圖 5" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 6 (平板以上顯示) -->
-                         <a href="https://www.instagram.com/p/DPRBX5cjwRa/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden md:block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="https://www.instagram.com/p/DPRBX5cjwRa/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden md:block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/556938273_17847663522572140_7229447364952889506_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=100&ig_cache_key=MzczMzc3MTU5MTgyMzA5MjM2OQ%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=dLAACl4_EU0Q7kNvwGUqt8x&_nc_oc=AdnT6eh5EoWhP_nqcUgEWozntGdasaIG6Rk4GtMb5GS_4isAmC0LH7wle8FT7pCC4dQRCHyfl8176e2BG-qSHeLH&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_AfcmI0xttFD-aVcaerNne36dnPQsFwunb_SyIdkUb-Jz5g&oe=68F2E83F" alt="H.Q.C. 貼文縮圖 6" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 7 (大螢幕以上顯示) -->
-                         <a href="https://www.instagram.com/p/DPsmWNBD8o2/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden lg:block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="https://www.instagram.com/p/DPsmWNBD8o2/?img_index=1" target="_blank" rel="noopener noreferrer" class="hidden lg:block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://scontent-tpe1-1.cdninstagram.com/v/t51.82787-15/563601532_17849434731572140_5877585588697773871_n.heic?stp=dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=Mzc0MTUzNDAyOTA1MDAxMTExMw%3D%3D.3-ccb1-7&ccb=1-7&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjE0NDB4MTQ0MC5zZHIuQzMifQ%3D%3D&_nc_ohc=p6htQMVqoqUQ7kNvwGc2Hj6&_nc_oc=Adn0uOXJC7jKMYPOIfRnF6VYDwSkr1XGExXwfUhVB-89P4pXPHWoFdRn-UeahVaIV9jVZW133JhUkMGlQdHrGXcA&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-tpe1-1.cdninstagram.com&_nc_gid=WyTDVK7R1NRnnq1DJFQBFg&oh=00_Afe_2bg3kbxMnZTfwPvHacGTGQ7LaW6m8BX_mMChkVFxpQ&oe=68F2F126" alt="H.Q.C. 貼文縮圖 7" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
-                        <!-- 範例 8 (大螢幕以上顯示) -->
-                         <a href="#" target="_blank" rel="noopener noreferrer" class="hidden lg:block aspect-square rounded-lg overflow-hidden group shadow-lg">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="hidden lg:block aspect-square rounded-lg overflow-hidden group shadow-lg">
                             <img src="https://placehold.co/300x300/1a1a1a/444444?text=Post+8" alt="H.Q.C. 貼文縮圖 8" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 ease-in-out">
                         </a>
                     </div>
-                    <!-- [修正] 將此區塊移至圖片牆 grid 的外部，確保版面正確 -->
-                    <div class="text-center mt-8 flex justify-center items-center space-x-6 md:space-x-8">
+                    <div class="text-center mt-8 flex flex-col items-center space-y-4 md:flex-row md:justify-center md:space-y-0 md:space-x-8">
                         <a href="https://www.facebook.com/HestiaQuantAcademy" target="_blank" rel="noopener noreferrer" class="text-brand-gold hover:text-brand-gold/80 transition-colors duration-300 flex items-center space-x-2 text-lg">
-                            <!-- Facebook SVG Icon, adjusted for style consistency -->
                             <svg aria-label="Facebook" class="w-6 h-6" fill="currentColor" role="img" viewBox="0 0 40 40">
                                 <path d="m27.8 25.6.9-5.6h-5.3v-3.9c0-1.6.6-2.8 3-2.8H29V8.2c-1.4-.2-3-.4-4.4-.4-4.6 0-7.8 2.8-7.8 7.8V20h-5v5.6h5v14.1c1.1.2 2.2.3 3.3.3 1.1 0 2.2-.1 3.3-.3V25.6h4.4z"/>
                             </svg>
-                          <!--  <span>追蹤 FB ▸</span>  -->
+                            <span>追蹤 FB ▸</span>
                         </a>
                         <a href="https://www.instagram.com/hestiaquantacademy" target="_blank" rel="noopener noreferrer" class="text-brand-gold hover:text-brand-gold/80 transition-colors duration-300 flex items-center space-x-2 text-lg">
-                            <!-- Official Instagram Glyph SVG -->
                             <svg aria-label="Instagram" class="w-6 h-6" fill="currentColor" role="img" viewBox="0 0 169.063 169.063">
                                 <g>
                                     <path d="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752
@@ -239,14 +214,13 @@
                                         C135.661,29.421,132.821,28.251,129.921,28.251z" />
                                 </g>
                             </svg>
-                         <!--   <span>追蹤 IG ▸</span>  -->
+                            <span>追蹤 IG ▸</span>
                         </a>
                         <a href="https://www.threads.com/@hestiaquantacademy" target="_blank" rel="noopener noreferrer" class="text-brand-gold hover:text-brand-gold/80 transition-colors duration-300 flex items-center space-x-2 text-lg">
-                            <!-- Official Threads Glyph SVG -->
                             <svg aria-label="Threads" class="w-6 h-6" fill="currentColor" role="img" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
                                 <path class="x19hqcy" d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.6116 63.5383 90.6052 61.6848 97.2286 61.6848C97.3051 61.6848 97.3819 61.6848 97.4576 61.6855C105.707 61.7381 111.932 64.1366 115.961 68.814C118.893 72.2193 120.854 76.925 121.825 82.8638C114.511 81.6207 106.601 81.2385 98.145 81.7233C74.3247 83.0954 59.0111 96.9879 60.0396 116.292C60.5615 126.084 65.4397 134.508 73.775 140.011C80.8224 144.663 89.899 146.938 99.3323 146.423C111.79 145.74 121.563 140.987 128.381 132.296C133.559 125.696 136.834 117.143 138.28 106.366C144.217 109.949 148.617 114.664 151.047 120.332C155.179 129.967 155.42 145.8 142.501 158.708C131.182 170.016 117.576 174.908 97.0135 175.059C74.2042 174.89 56.9538 167.575 45.7381 153.317C35.2355 139.966 29.8077 120.682 29.6052 96C29.8077 71.3178 35.2355 52.0336 45.7381 38.6827C56.9538 24.4249 74.2039 17.11 97.0132 16.9405C119.988 17.1113 137.539 24.4614 149.184 38.788C154.894 45.8136 159.199 54.6488 162.037 64.9503L178.184 60.6422C174.744 47.9622 169.331 37.0357 161.965 27.974C147.036 9.60668 125.202 0.195148 97.0695 0H96.9569C68.8816 0.19447 47.2921 9.6418 32.7883 28.0793C19.8819 44.4864 13.2244 67.3157 13.0007 95.9325L13 96L13.0007 96.0675C13.2244 124.684 19.8819 147.514 32.7883 163.921C47.2921 182.358 68.8816 191.806 96.9569 192H97.0695C122.03 191.827 139.624 185.292 154.118 170.811C173.081 151.866 172.51 128.119 166.26 113.541C161.776 103.087 153.227 94.5962 141.537 88.9883ZM98.4405 129.507C88.0005 130.095 77.1544 125.409 76.6196 115.372C76.2232 107.93 81.9158 99.626 99.0812 98.6368C101.047 98.5234 102.976 98.468 104.871 98.468C111.106 98.468 116.939 99.0737 122.242 100.233C120.264 124.935 108.662 128.946 98.4405 129.507Z"></path>
                             </svg>
-                          <!--  <span>追蹤 Threads ▸</span>  -->
+                            <span>追蹤 Threads ▸</span>
                         </a>
                     </div>
                 </div>
@@ -260,9 +234,8 @@
                     啟動您的量化交易藍圖
                 </h2>
                 <p class="mt-6 text-xl text-brand-beige max-w-2xl mx-auto">
-                    我們正積極尋求合作共同開設量化交易課程。</p>
-                <p class="mt-6 text-xl text-brand-beige max-w-2xl mx-auto">
-                    誠摯邀請您與我們聯繫。</p>
+                    我們正積極尋求合作共同開設量化交易課程。誠摯邀請您與我們聯繫。
+                </p>
                 <a href="mailto:contact@hestiaquant.com" class="mt-12 inline-block border-2 border-brand-gold text-brand-gold font-bold text-lg px-8 py-4 rounded-lg hover-bg-brand-gold hover-text-brand-black transition-all duration-300 transform hover:scale-105">
                     聯絡我們：contact@hestiaquant.com
                 </a>
@@ -283,30 +256,4 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
