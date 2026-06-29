@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣期貨市場入門｜H.Q.C. 赫斯提亞量化資本</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lora', 'Source Han Serif TC', '思源宋體', 'Noto Serif CJK TC', serif; font-size: 13pt; line-height: 1.9; color: #FAF6EE; background-color: #1a1a1a; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 40px; }
+.chapter-badge { display: inline-block; background: #C9A84C; color: #1a1a1a; font-size: 9.5pt; font-weight: bold; padding: 3px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px; }
+h1 { font-size: 22pt; font-weight: 700; color: #FAF6EE; border-bottom: 2px solid #C9A84C; padding-bottom: 10px; margin-bottom: 8px; }
+.tagline { font-size: 11pt; color: #BBBBBB; margin-bottom: 36px; }
+h2 { font-size: 15pt; font-weight: 600; color: #FAF6EE; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #C9A84C; padding-left: 12px; }
+h3 { font-size: 13pt; font-weight: bold; color: #C9A84C; margin-top: 22px; margin-bottom: 8px; }
+p { margin-bottom: 14px; text-align: justify; }
+.highlight-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.key-insight { background-color: #C9A84C; color: #1a1a1a; border-left: 5px solid #FAF6EE; padding: 16px 20px; margin: 22px 0; border-radius: 2px; font-weight: bold; }
+.danger-box { background-color: #2A1818; border-left: 5px solid #C0392B; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.mc-box { background-color: #1F1F1F; border: 1px solid #C9A84C; border-radius: 6px; padding: 20px 24px; margin: 28px 0; }
+.mc-box .mc-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mc-box .mc-icon { background: #C9A84C; color: #1a1a1a; font-size: 9pt; font-weight: bold; padding: 3px 10px; border-radius: 12px; }
+.mc-box h3 { color: #C9A84C; margin: 0; font-size: 12.5pt; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 11.5pt; }
+th { background-color: #C9A84C; color: #1a1a1a; padding: 10px 14px; text-align: center; font-weight: bold; }
+td { border: 1px solid #3A3A3A; padding: 10px 14px; vertical-align: middle; color: #FAF6EE; }
+tr:nth-child(even) td { background-color: #242424; }
+tr:nth-child(odd) td { background-color: #1a1a1a; }
+td.label-col { background-color: #2A2A2A !important; color: #C9A84C; font-weight: bold; min-width: 110px; }
+ul, ol { padding-left: 26px; margin-bottom: 14px; }
+li { margin-bottom: 8px; }
+hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
+.bold { font-weight: bold; }
+.gold { color: #C9A84C; font-weight: bold; }
+.red { color: #E74C3C; font-weight: bold; }
+.green { color: #58D68D; font-weight: bold; }
+.tag-big { background:#C9A84C; color:#1a1a1a; padding:2px 8px; border-radius:3px; font-weight:bold; font-size:10pt; }
+.tag-small { background:#2A2A2A; color:#C9A84C; border:1px solid #C9A84C; padding:2px 8px; border-radius:3px; font-weight:bold; font-size:10pt; }
+.tag-micro { background:#333; color:#BBB; border:1px solid #555; padding:2px 8px; border-radius:3px; font-weight:bold; font-size:10pt; }
+.session-bar { display: flex; align-items: center; margin: 8px 0; gap: 0; height: 36px; border-radius: 4px; overflow: hidden; }
+.session-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 9pt; font-weight: bold; }
+.cta-section { background: linear-gradient(135deg, #1F1A0E 0%, #2A2010 100%); border: 1px solid #C9A84C; border-radius: 8px; padding: 32px 36px; margin-top: 48px; text-align: center; }
+.cta-section h2 { border: none; padding: 0; margin: 0 0 12px 0; font-size: 16pt; color: #C9A84C; }
+.cta-section p { color: #BBBBBB; margin-bottom: 22px; text-align: center; }
+.cta-btn { display: inline-block; background: #C9A84C; color: #1a1a1a; font-family: 'Lora', serif; font-size: 12pt; font-weight: bold; padding: 12px 36px; border-radius: 4px; text-decoration: none; transition: opacity 0.2s; }
+.cta-btn:hover { opacity: 0.85; }
+.nav-hint { text-align: center; margin-top: 18px; font-size: 10pt; color: #666; }
+</style>
+</head>
+<body>
+    <!-- 章節導覽列 -->
+    <div style="position:sticky;top:0;z-index:999;background:#111111;border-bottom:1px solid #C9A84C;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'Lora',serif;">
+        <a href="ch1.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block">← 第一章節：量化交易是什麼？</a>
+        <a href="index.html" style="color:#FAF6EE;text-decoration:none;font-size:10.5pt;font-weight:bold;white-space:nowrap;border:1px solid #C9A84C;padding:4px 14px;border-radius:14px;flex-shrink:0;">🏠 返回首頁</a>
+        <a href="ch3.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block;text-align:right">第三章節：如何設計策略？ →</a>
+    </div>
+<div class="container">
+
+<div class="chapter-badge">第二章節</div>
+<h1>台灣期貨市場入門</h1>
+<p class="tagline">H.Q.C. 赫斯提亞量化資本 · 免費知識分享</p>
+
+<p>在正式學習量化策略設計之前，必須先了解交易的「場地」。本章節用最直白的方式介紹台灣期貨市場的基本知識，讓你在開始設計策略前，對這個市場有紮實的認識。</p>
+
+<!-- ============================================================ -->
+<h2>一、期貨是什麼？和股票有什麼不同？</h2>
+
+<p>期貨是一種「約定未來交易條件」的合約。你和交易所約定，在某個未來的時間點，以今天約定的價格，買入或賣出某個標的（例如台灣加權指數）。</p>
+
+<p>和股票的最大差異有兩點：</p>
+
+<ul>
+  <li><span class="bold">可以做空：</span>股票市場一般只能先買後賣（做多），但期貨可以先賣後買（做空）。市場下跌時，做空的交易者可以獲利。這讓量化策略在多空兩個方向都有機會。</li>
+  <li><span class="bold">槓桿交易：</span>你不需要支付合約全額，只需支付一部分的「保證金」就能操作整張合約。槓桿放大獲利的同時也放大虧損，這是期貨交易風險管理最重要的原因之一。</li>
+</ul>
+
+<div class="key-insight">
+台指期追蹤的是台灣加權股價指數（TAIEX），也就是大家每天在電視財經新聞看到的那個數字。指數漲，做多的期貨就獲利；指數跌，做空的期貨就獲利。
+</div>
+
+<!-- ============================================================ -->
+<h2>二、台指期三兄弟：大台、小台、微台</h2>
+
+<p>台灣期交所提供三種規模的台指期合約，追蹤的標的完全相同，差別只在合約的「大小」：</p>
+
+<table>
+  <tr>
+    <th>商品</th>
+    <th>代碼</th>
+    <th>每點價值</th>
+    <th>保證金估算</th>
+    <th>適合對象</th>
+  </tr>
+  <tr>
+    <td><span class="tag-big">大台 TX</span></td>
+    <td style="text-align:center">TX</td>
+    <td style="text-align:center"><span class="bold">200 元</span></td>
+    <td style="text-align:center">約 63 萬元</td>
+    <td>資金較充裕、需要最佳流動性</td>
+  </tr>
+  <tr>
+    <td><span class="tag-small">小台 MTX</span></td>
+    <td style="text-align:center">MTX</td>
+    <td style="text-align:center"><span class="bold">50 元</span></td>
+    <td style="text-align:center">約 16 萬元</td>
+    <td>主力學習和驗證階段的首選</td>
+  </tr>
+  <tr>
+    <td><span class="tag-micro">微台 TMF</span></td>
+    <td style="text-align:center">TMF</td>
+    <td style="text-align:center"><span class="bold">10 元</span></td>
+    <td style="text-align:center">約 3 萬元</td>
+    <td>剛開始學習、預算有限的入門者</td>
+  </tr>
+</table>
+
+<p>舉個例子：台指期指數在 23,000 點，如果你持有 1 口大台做多，指數每上漲 1 點，你的帳面獲利增加 200 元；上漲 100 點，獲利 20,000 元；反之下跌 100 點，虧損 20,000 元。</p>
+
+<div class="highlight-box">
+<p><span class="bold">三種合約的選擇建議：</span>三者追蹤同一個指數，走勢完全相同。策略學習初期建議從微台或小台開始，原因不只是保證金較低，而是當單次虧損金額較小，你才能保持心態穩定地執行策略，累積足夠的樣本數來驗證策略是否真的有效。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>三、交易時間：日盤與夜盤</h2>
+
+<p>台指期有別於股票，提供了日盤和夜盤兩個交易時段：</p>
+
+<table>
+  <tr>
+    <th>時段</th>
+    <th>交易時間</th>
+    <th>特性</th>
+  </tr>
+  <tr>
+    <td class="label-col">日盤</td>
+    <td>08:45 ～ 13:45</td>
+    <td>台灣股市開盤期間，成交量最集中，流動性最高，與現貨市場同步</td>
+  </tr>
+  <tr>
+    <td class="label-col">夜盤</td>
+    <td>15:00 ～ 隔日 05:00</td>
+    <td>延伸至深夜，受美股開盤（約台灣時間 21:30）影響明顯，流動性集中在 21:00 之後</td>
+  </tr>
+</table>
+
+<p>對量化交易者來說，日盤和夜盤的行情特性有明顯差異，設計策略時需要分別考量，或明確指定策略只在某個時段運行。</p>
+
+<!-- ============================================================ -->
+<h2>四、保證金：你真正需要了解的風控核心</h2>
+
+<p>期貨交易的「保證金」不是費用，而是你存入交易所帳戶的「押金」，代表你有能力承擔合約的損益波動。</p>
+
+<p>有兩個重要的保證金數字：</p>
+
+<ul>
+  <li><span class="gold">原始保證金：</span>進場時帳戶中必須有的最低金額（以小台約 16 萬元為例）</li>
+  <li><span class="gold">維持保證金：</span>持有期間帳戶的最低允許金額（通常約為原始保證金的 75%）。若帳戶資金因虧損降至維持保證金以下，期貨商會發出「追繳通知」，要求你補繳至原始保證金水準，否則強制平倉。</li>
+</ul>
+
+<div class="danger-box">
+<p><span class="bold" style="color:#E74C3C">最常見的危險情境：</span>只存入剛好夠原始保證金的金額，卻完全沒有預留應對虧損的緩衝空間。市場在一天內大幅波動時，帳戶可能迅速觸及追繳水位，被強制平倉在最不利的位置。量化交易的基本原則之一，是帳戶中的備用資金必須足夠應對策略設計的最大可能回撤。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>五、結算：合約的「到期日」</h2>
+
+<p>期貨合約有到期日，台指期每月第三個週三為最後交易日，到期後以現金結算。如果你的策略涉及跨月持倉，需要在到期前將部位從近月合約「換倉」到次月合約，否則合約到期後部位自動結算消失。</p>
+
+<p>量化策略在設計時，需要把結算日的特殊處理寫進程式邏輯中，確保策略在結算日附近的行為符合預期。</p>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="mc-box">
+  <div class="mc-title">
+    <span class="mc-icon">MultiCharts</span>
+    <h3>在 MultiCharts 載入台指期資料</h3>
+  </div>
+  <p>開始使用 MultiCharts 分析台指期時，第一步是正確設定資料來源。以下是基本步驟：</p>
+  <h3>新增台指期圖表</h3>
+  <ol>
+    <li>開啟 MultiCharts，選擇「檔案」→「新增圖表視窗」</li>
+    <li>在商品欄輸入代碼：<span class="gold">TX</span>（大台）、<span class="gold">MTX</span>（小台）或 <span class="gold">TMF</span>（微台）</li>
+    <li>選擇交易所：<span class="gold">TAIFEX</span>（台灣期貨交易所）</li>
+    <li>選擇時間框架：1分鐘、5分鐘、60分鐘、日線等依策略需求而定</li>
+  </ol>
+  <h3>連續合約設定</h3>
+  <p>回測策略時，建議使用「連續合約」（Continuous Contract）而非單一月份合約，這樣資料才能跨越多年而不中斷。在 MultiCharts 中，連續合約以 <span class="gold">@TX#</span> 或 <span class="gold">@MTX#</span> 表示（# 代表連續最近月）。</p>
+  <h3>常用時間框架說明</h3>
+  <table style="margin:12px 0 0 0">
+    <tr>
+      <th>時間框架</th>
+      <th>適合策略類型</th>
+      <th>資料載入建議年數</th>
+    </tr>
+    <tr><td style="text-align:center">1分鐘 / 5分鐘</td><td>日內超短線策略</td><td>1～3年（資料量大）</td></tr>
+    <tr><td style="text-align:center">60分鐘</td><td>日內波段策略</td><td>3～5年</td></tr>
+    <tr><td style="text-align:center">日線</td><td>中波段至長波段</td><td>5～10年以上</td></tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="cta-section">
+  <h2>想深入學習台指期與量化策略？</h2>
+  <p>台灣期貨市場的細節遠不止於此。保證金的精確計算方式、換倉成本的量化、夜盤策略的設計邏輯，這些都是建立實戰量化系統的必要知識。H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 的完整課程，帶你從市場結構一路學到策略部署。</p>
+  <a class="cta-btn" href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener">前往 Pressplay 查看完整課程</a>
+  <p class="nav-hint">第二章節完 &nbsp;·&nbsp; 繼續閱讀第三章節：如何設計一個量化策略？</p>
+</div>
+
+<p style="text-align:center; color:#555; margin-top:36px; font-size:10pt;">
+  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考
+</p>
+
+</div>
+</body>
+</html>

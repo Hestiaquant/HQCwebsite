@@ -33,6 +33,76 @@
             height: 80px; /* Header 的高度 */
             margin: -80px 0 0;
         }
+
+        /* ── 量化知識 Dropdown ── */
+        .hq-dropdown { position: relative; }
+        .hq-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 230px;
+            background: #1a1a1a;
+            border: 1px solid #D4AF37;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+            z-index: 200;
+            padding-top: 4px;
+        }
+        .hq-dropdown-menu.open { display: block; }
+        .hq-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 18px;
+            color: #EAE7E0;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 1px solid #2a2a2a;
+            transition: background 0.18s, color 0.18s;
+        }
+        .hq-dropdown-menu a:last-child { border-bottom: none; }
+        .hq-dropdown-menu a:hover { background: #D4AF37; color: #171512; }
+        .hq-dropdown-menu a .ch-num {
+            min-width: 22px; height: 22px;
+            border-radius: 50%;
+            background: #D4AF37; color: #171512;
+            font-size: 11px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.18s, color 0.18s;
+        }
+        .hq-dropdown-menu a:hover .ch-num { background: #171512; color: #D4AF37; }
+
+        /* ── 量化知識 卡片 ── */
+        .kcard {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 28px 24px;
+            display: flex; flex-direction: column;
+            text-decoration: none;
+            transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+        }
+        .kcard:hover {
+            border-color: #D4AF37;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(212,175,55,0.12);
+        }
+        .kcard .kbadge {
+            display: inline-block;
+            background: #D4AF37; color: #171512;
+            font-size: 11px; font-weight: bold;
+            padding: 2px 10px; border-radius: 20px;
+            margin-bottom: 14px; letter-spacing: 0.5px;
+            width: fit-content;
+        }
+        .kcard .ktitle { font-size: 17px; font-weight: bold; color: #EAE7E0; margin-bottom: 10px; line-height: 1.5; }
+        .kcard .kdesc  { font-size: 13.5px; color: rgba(234,231,224,0.65); line-height: 1.7; flex: 1; }
+        .kcard .klink  { margin-top: 18px; font-size: 13px; color: #D4AF37; font-weight: bold; }
     </style>
 </head>
 <body class="bg-brand-black text-brand-beige scroll-smooth">
@@ -44,9 +114,25 @@
                 <img src="images/LOGO.jpg" alt="H.Q.C. Logo" class="h-8 w-auto">
                 <span class="text-xl font-bold text-brand-beige tracking-wider">Hestia Quant Academy</span>
             </a>
-            <nav class="hidden md:flex space-x-8 text-lg">
+            <nav class="hidden md:flex items-center space-x-8 text-lg">
                 <a href="#philosophy" class="hover:text-brand-gold transition-colors duration-300">品牌理念</a>
                 <a href="#blueprint" class="hover:text-brand-gold transition-colors duration-300">課程藍圖</a>
+
+                <!-- 量化知識下拉選單 -->
+                <div class="hq-dropdown">
+                    <a href="#knowledge" class="hover:text-brand-gold transition-colors duration-300 flex items-center gap-1 cursor-pointer select-none">
+                        量化知識
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </a>
+                    <div class="hq-dropdown-menu">
+                        <a href="ch1.html"><span class="ch-num">1</span>量化交易是什麼？</a>
+                        <a href="ch2.html"><span class="ch-num">2</span>台灣期貨市場入門</a>
+                        <a href="ch3.html"><span class="ch-num">3</span>如何設計量化策略？</a>
+                        <a href="ch4.html"><span class="ch-num">4</span>如何看懂績效數字？</a>
+                        <a href="ch5.html"><span class="ch-num">5</span>回測不等於未來</a>
+                    </div>
+                </div>
+
                 <a href="#content" class="hover:text-brand-gold transition-colors duration-300">內容展示</a>
                 <a href="#contact" class="hover:text-brand-gold transition-colors duration-300">聯絡我們</a>
             </nav>
@@ -155,7 +241,59 @@
             </div>
         </section>
         
-        <!-- Section 5: Content Showcase -->
+        <!-- Section 5: Free Knowledge Sharing -->
+        <section id="knowledge" class="py-20 md:py-32 bg-brand-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <span style="display:inline-block;background:#D4AF37;color:#171512;font-size:11px;font-weight:bold;padding:3px 14px;border-radius:20px;letter-spacing:1px;margin-bottom:14px;">免費開放</span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-brand-gold">量化知識分享</h2>
+                    <p class="mt-4 text-lg text-brand-beige/70 max-w-2xl mx-auto">五個章節帶你建立量化交易的核心觀念，完整免費閱讀。想系統化深入學習，歡迎參加我們在 Pressplay Academy 的完整課程。</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="ch1.html" class="kcard">
+                        <span class="kbadge">第一章節</span>
+                        <div class="ktitle">量化交易是什麼？</div>
+                        <div class="kdesc">用白話解釋「系統取代情緒」的核心邏輯，了解量化交易的三個組成元素，以及為什麼台指期是絕佳的實踐場域。</div>
+                        <div class="klink">開始閱讀 →</div>
+                    </a>
+                    <a href="ch2.html" class="kcard">
+                        <span class="kbadge">第二章節</span>
+                        <div class="ktitle">台灣期貨市場入門</div>
+                        <div class="kdesc">大台、小台、微台的規格比較，交易時段全覽，保證金機制說明，以及 MultiCharts 載入台指期連續合約的方法。</div>
+                        <div class="klink">開始閱讀 →</div>
+                    </a>
+                    <a href="ch3.html" class="kcard">
+                        <span class="kbadge">第三章節</span>
+                        <div class="ktitle">如何設計量化策略？</div>
+                        <div class="kdesc">從模糊交易直覺到可執行規則的三層轉化，策略四模塊設計框架，以及 PowerLanguage 基礎語法與常用函數總覽。</div>
+                        <div class="klink">開始閱讀 →</div>
+                    </a>
+                    <a href="ch4.html" class="kcard">
+                        <span class="kbadge">第四章節</span>
+                        <div class="ktitle">如何看懂策略的績效數字？</div>
+                        <div class="kdesc">揭開「高勝率不等於賺錢」的真相，五大關鍵績效指標解析，以及如何在 MultiCharts 績效報告中找到這些數字。</div>
+                        <div class="klink">開始閱讀 →</div>
+                    </a>
+                    <a href="ch5.html" class="kcard">
+                        <span class="kbadge">第五章節</span>
+                        <div class="ktitle">回測不等於未來，如何驗證策略？</div>
+                        <div class="kdesc">什麼是過度最佳化？樣本內/樣本外分割原理，前進分析（WFA）概念介紹，以及從回測到實盤的四步過渡流程。</div>
+                        <div class="klink">開始閱讀 →</div>
+                    </a>
+                    <a href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener"
+                       style="background:linear-gradient(135deg,#1F1A0E,#2A2010);border:1px solid #D4AF37;border-radius:12px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;text-decoration:none;transition:transform 0.2s,box-shadow 0.25s;"
+                       onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 28px rgba(212,175,55,0.2)'"
+                       onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="font-size:36px;margin-bottom:12px;">🎓</div>
+                        <div style="color:#D4AF37;font-weight:bold;font-size:16px;margin-bottom:10px;">想要更深入學習？</div>
+                        <div style="color:rgba(234,231,224,0.7);font-size:13.5px;line-height:1.7;margin-bottom:18px;">前往 Pressplay Academy 查看完整系統化課程</div>
+                        <span style="background:#D4AF37;color:#171512;font-weight:bold;font-size:13px;padding:9px 22px;border-radius:4px;">前往完整課程 →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Content Showcase -->
         <section id="content" class="py-20 md:py-32 bg-brand-black">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
@@ -254,6 +392,19 @@
         </div>
     </footer>
 
+    <script>
+        /* ── 量化知識 Dropdown：滑鼠移入選單前不消失 ── */
+        document.querySelectorAll('.hq-dropdown').forEach(function(el) {
+            var menu = el.querySelector('.hq-dropdown-menu');
+            var timer;
+            function open()  { clearTimeout(timer); menu.classList.add('open'); }
+            function close() { timer = setTimeout(function(){ menu.classList.remove('open'); }, 120); }
+            el.addEventListener('mouseenter', open);
+            el.addEventListener('mouseleave', close);
+            menu.addEventListener('mouseenter', open);
+            menu.addEventListener('mouseleave', close);
+        });
+    </script>
 </body>
 </html>
 

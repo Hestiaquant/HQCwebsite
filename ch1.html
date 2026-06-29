@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量化交易是什麼？｜H.Q.C. 赫斯提亞量化資本</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lora', 'Source Han Serif TC', '思源宋體', 'Noto Serif CJK TC', serif; font-size: 13pt; line-height: 1.9; color: #FAF6EE; background-color: #1a1a1a; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 40px; }
+.chapter-badge { display: inline-block; background: #C9A84C; color: #1a1a1a; font-size: 9.5pt; font-weight: bold; padding: 3px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px; }
+h1 { font-size: 22pt; font-weight: 700; color: #FAF6EE; border-bottom: 2px solid #C9A84C; padding-bottom: 10px; margin-bottom: 8px; }
+.tagline { font-size: 11pt; color: #BBBBBB; margin-bottom: 36px; }
+h2 { font-size: 15pt; font-weight: 600; color: #FAF6EE; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #C9A84C; padding-left: 12px; }
+h3 { font-size: 13pt; font-weight: bold; color: #C9A84C; margin-top: 22px; margin-bottom: 8px; }
+p { margin-bottom: 14px; text-align: justify; }
+.highlight-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.key-insight { background-color: #C9A84C; color: #1a1a1a; border-left: 5px solid #FAF6EE; padding: 16px 20px; margin: 22px 0; border-radius: 2px; font-weight: bold; }
+.mc-box { background-color: #1F1F1F; border: 1px solid #C9A84C; border-radius: 6px; padding: 20px 24px; margin: 28px 0; }
+.mc-box .mc-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mc-box .mc-icon { background: #C9A84C; color: #1a1a1a; font-size: 9pt; font-weight: bold; padding: 3px 10px; border-radius: 12px; }
+.mc-box h3 { color: #C9A84C; margin: 0; font-size: 12.5pt; }
+.comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+.comp-card { background: #242424; border-radius: 4px; padding: 16px 18px; border-top: 3px solid; }
+.comp-card.bad { border-color: #E74C3C; }
+.comp-card.good { border-color: #58D68D; }
+.comp-card .comp-label { font-size: 10pt; font-weight: bold; margin-bottom: 8px; }
+.comp-card.bad .comp-label { color: #E74C3C; }
+.comp-card.good .comp-label { color: #58D68D; }
+ul, ol { padding-left: 26px; margin-bottom: 14px; }
+li { margin-bottom: 8px; }
+hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
+.bold { font-weight: bold; }
+.gold { color: #C9A84C; font-weight: bold; }
+/* CTA */
+.cta-section { background: linear-gradient(135deg, #1F1A0E 0%, #2A2010 100%); border: 1px solid #C9A84C; border-radius: 8px; padding: 32px 36px; margin-top: 48px; text-align: center; }
+.cta-section h2 { border: none; padding: 0; margin: 0 0 12px 0; font-size: 16pt; color: #C9A84C; }
+.cta-section p { color: #BBBBBB; margin-bottom: 22px; text-align: center; }
+.cta-btn { display: inline-block; background: #C9A84C; color: #1a1a1a; font-family: 'Lora', serif; font-size: 12pt; font-weight: bold; padding: 12px 36px; border-radius: 4px; text-decoration: none; transition: opacity 0.2s; }
+.cta-btn:hover { opacity: 0.85; }
+.nav-hint { text-align: center; margin-top: 18px; font-size: 10pt; color: #666; }
+</style>
+</head>
+<body>
+    <!-- 章節導覽列 -->
+    <div style="position:sticky;top:0;z-index:999;background:#111111;border-bottom:1px solid #C9A84C;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'Lora',serif;">
+        <span style="opacity:0;pointer-events:none;font-size:10.5pt">←</span>
+        <a href="index.html" style="color:#FAF6EE;text-decoration:none;font-size:10.5pt;font-weight:bold;white-space:nowrap;border:1px solid #C9A84C;padding:4px 14px;border-radius:14px;flex-shrink:0;">🏠 返回首頁</a>
+        <a href="ch2.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block;text-align:right">第二章節：台灣期貨入門 →</a>
+    </div>
+<div class="container">
+
+<div class="chapter-badge">第一章節</div>
+<h1>量化交易是什麼？</h1>
+<p class="tagline">H.Q.C. 赫斯提亞量化資本 · 免費知識分享</p>
+
+<p>你有沒有這樣的經驗：設好了停損，但價格真的跌下去的那一刻，手就是動不了。或是明明獲利 10%，卻因為捨不得，最後原價出場。這不是意志力的問題，是人類大腦面對金錢風險時的預設反應。而量化交易，就是為了解決這個問題而誕生的。</p>
+
+<!-- ============================================================ -->
+<h2>一、用白話解釋量化交易</h2>
+
+<p>量化交易的核心概念很簡單：<span class="bold">用明確的規則取代模糊的判斷。</span></p>
+
+<p>傳統的主觀交易依賴交易者的感覺、經驗和當下判斷。今天感覺好就多買一點，消息面看起來不錯就押大一些，感覺快到頂了就提早跑。這些決策都發生在人腦中，受情緒、疲勞、偏見的影響。</p>
+
+<p>量化交易則不同。你在電腦平靜、大腦清醒的時候，把進場條件、出場條件、停損規則全部寫成清楚的規則（或程式碼）。之後，不管市場怎麼動、情緒怎麼波動，電腦都按照你預先設計的規則執行，<span class="bold">不多也不少。</span></p>
+
+<div class="comparison">
+  <div class="comp-card bad">
+    <div class="comp-label">主觀交易的困境</div>
+    <ul>
+      <li>進場：感覺不錯就買</li>
+      <li>加碼：帳面獲利就衝</li>
+      <li>停損：虧損了先等等</li>
+      <li>出場：捨不得就繼續抱</li>
+    </ul>
+    <p style="margin:0; font-size:10.5pt; color:#888">每個決策都受情緒干擾，規則每天不一樣</p>
+  </div>
+  <div class="comp-card good">
+    <div class="comp-label">量化交易的優勢</div>
+    <ul>
+      <li>進場：條件觸發才進</li>
+      <li>加碼：依資金管理公式</li>
+      <li>停損：觸及點位自動出</li>
+      <li>出場：達到目標即執行</li>
+    </ul>
+    <p style="margin:0; font-size:10.5pt; color:#888">規則固定、一致，不受情緒左右</p>
+  </div>
+</div>
+
+<div class="key-insight">
+量化交易的本質不是讓電腦更聰明地預測市場，而是讓你在最容易犯錯的時刻，仍然能做出早就計畫好的正確決策。
+</div>
+
+<!-- ============================================================ -->
+<h2>二、量化交易適合誰？</h2>
+
+<p>很多人以為量化交易是學數學的人或資工背景才能做的事。實際上，量化交易的門檻比你想像的低，但需要的不是數學，而是<span class="bold">紀律、邏輯和持續學習的意願。</span></p>
+
+<h3>適合以下族群</h3>
+<ul>
+  <li><span class="bold">有交易經驗，但績效不穩定：</span>你可能懂技術分析，也有交易直覺，但每次的決策品質差異太大。量化方法能幫你把有效的直覺轉化成穩定的規則。</li>
+  <li><span class="bold">對市場感興趣，想從零開始建立系統：</span>不需要有豐富的交易歷史，量化方法本身就是一套從零建立的流程。</li>
+  <li><span class="bold">希望交易不要佔據太多時間：</span>建立好策略後，可以讓電腦自動執行，不需要盯著盤。</li>
+</ul>
+
+<h3>需要具備的心態</h3>
+<ul>
+  <li>願意接受策略有時候虧損，相信長期期望值才是評判標準</li>
+  <li>願意用數據驗證想法，而非依賴感覺</li>
+  <li>有耐心走完「設計→回測→驗證→部署」的完整流程</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2>三、量化交易的三個核心元素</h2>
+
+<p>不管是多複雜的量化策略，都由以下三個核心元素組成：</p>
+
+<div class="highlight-box">
+  <p><span class="gold">① 進場條件</span> — 在什麼情況下進場？</p>
+  <p>例如：當 20 日均線向上穿越 60 日均線時，隔日開盤進場做多。每個條件必須是「電腦可以判斷的」，不能模糊。</p>
+</div>
+
+<div class="highlight-box">
+  <p><span class="gold">② 出場條件</span> — 在什麼情況下出場？</p>
+  <p>包含停損（保護資本）和停利（鎖定獲利）。停損必須在進場前就決定好，不能在虧損時臨時改變。</p>
+</div>
+
+<div class="highlight-box">
+  <p><span class="gold">③ 資金管理</span> — 每次下多少量？</p>
+  <p>控制每筆交易佔帳戶資金的比例。即使有很好的策略，資金管理不當一樣會讓帳戶歸零。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四、為什麼台指期是量化交易的好場域？</h2>
+
+<p>台灣加權指數期貨（台指期）是全亞洲成交量最活躍的指數期貨之一，它有幾個特別適合量化策略的特性：</p>
+
+<ul>
+  <li><span class="bold">流動性高：</span>大台（TX）每日成交量龐大，量化策略的進出場執行阻力低</li>
+  <li><span class="bold">槓桿適中：</span>可以用相對小的保證金控制較大部位，資金效率高（但槓桿同時放大風險，必須配合嚴格的資金管理）</li>
+  <li><span class="bold">日夜盤覆蓋廣：</span>日盤到夜盤幾乎涵蓋 14 小時的交易時間，策略設計靈活</li>
+  <li><span class="bold">歷史資料完整：</span>1998 年開市至今超過 25 年的歷史資料，可以用來驗證策略在各種市場環境的表現</li>
+</ul>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="mc-box">
+  <div class="mc-title">
+    <span class="mc-icon">MultiCharts</span>
+    <h3>H.Q.C. 的主力工具：MultiCharts 是什麼？</h3>
+  </div>
+  <p>H.Q.C. 赫斯提亞量化資本主要使用 <span class="bold">MultiCharts</span> 作為量化策略的開發、回測與自動執行平台。MultiCharts 是一套專業的程式交易軟體，被台灣和全球大量量化交易者使用。</p>
+  <p>MultiCharts 的核心功能包含：</p>
+  <ul>
+    <li><span class="gold">圖表分析：</span>支援多種商品、多個時間框架的 K 線圖，內建超過 300 個技術指標</li>
+    <li><span class="gold">策略回測：</span>把你的交易規則寫成程式碼，用歷史資料模擬過去的執行結果</li>
+    <li><span class="gold">參數最佳化：</span>自動掃描多組參數組合，找出歷史表現最好的設定</li>
+    <li><span class="gold">前進分析（WFA）：</span>更嚴謹的驗證方式，確認策略不是只靠「記憶」歷史而是真的有預測能力</li>
+    <li><span class="gold">自動下單：</span>與台灣各大期貨商 API 連接，讓策略 24 小時自動執行進出場委託</li>
+  </ul>
+  <p style="margin-bottom:0">MultiCharts 使用的程式語言叫做 <span class="bold">PowerLanguage</span>，語法接近自然語言，即使沒有程式背景也相對容易上手。這也是我們選擇它的原因之一。</p>
+</div>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="cta-section">
+  <h2>想學完整的量化交易系統？</h2>
+  <p>本章節只是量化交易的入口。H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 上架了完整的系統化課程，從交易心理、台指期市場、策略設計、績效評估到前進分析驗證，帶你一步一步建立屬於自己的量化交易系統。</p>
+  <a class="cta-btn" href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener">前往 Pressplay 查看完整課程</a>
+  <p class="nav-hint">第一章節完 &nbsp;·&nbsp; 繼續閱讀第二章節：台灣期貨市場入門</p>
+</div>
+
+<p style="text-align:center; color:#555; margin-top:36px; font-size:10pt;">
+  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考
+</p>
+
+</div>
+</body>
+</html>

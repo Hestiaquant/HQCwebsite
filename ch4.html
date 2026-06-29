@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如何看懂策略的績效數字？｜H.Q.C. 赫斯提亞量化資本</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lora', 'Source Han Serif TC', '思源宋體', 'Noto Serif CJK TC', serif; font-size: 13pt; line-height: 1.9; color: #FAF6EE; background-color: #1a1a1a; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 40px; }
+.chapter-badge { display: inline-block; background: #C9A84C; color: #1a1a1a; font-size: 9.5pt; font-weight: bold; padding: 3px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px; }
+h1 { font-size: 22pt; font-weight: 700; color: #FAF6EE; border-bottom: 2px solid #C9A84C; padding-bottom: 10px; margin-bottom: 8px; }
+.tagline { font-size: 11pt; color: #BBBBBB; margin-bottom: 36px; }
+h2 { font-size: 15pt; font-weight: 600; color: #FAF6EE; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #C9A84C; padding-left: 12px; }
+h3 { font-size: 13pt; font-weight: bold; color: #C9A84C; margin-top: 22px; margin-bottom: 8px; }
+p { margin-bottom: 14px; text-align: justify; }
+.highlight-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.key-insight { background-color: #C9A84C; color: #1a1a1a; border-left: 5px solid #FAF6EE; padding: 16px 20px; margin: 22px 0; border-radius: 2px; font-weight: bold; }
+.danger-box { background-color: #2A1818; border-left: 5px solid #C0392B; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.warning-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.mc-box { background-color: #1F1F1F; border: 1px solid #C9A84C; border-radius: 6px; padding: 20px 24px; margin: 28px 0; }
+.mc-box .mc-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mc-box .mc-icon { background: #C9A84C; color: #1a1a1a; font-size: 9pt; font-weight: bold; padding: 3px 10px; border-radius: 12px; }
+.mc-box h3 { color: #C9A84C; margin: 0; font-size: 12.5pt; }
+.formula { font-family: "Courier New", monospace; background-color: #111111; color: #FAF6EE; padding: 10px 16px; border-radius: 2px; margin: 10px 0; font-size: 11pt; display: block; border-left: 3px solid #C9A84C; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 11.5pt; }
+th { background-color: #C9A84C; color: #1a1a1a; padding: 10px 14px; text-align: center; font-weight: bold; }
+td { border: 1px solid #3A3A3A; padding: 10px 14px; vertical-align: middle; color: #FAF6EE; }
+tr:nth-child(even) td { background-color: #242424; }
+tr:nth-child(odd) td { background-color: #1a1a1a; }
+td.label-col { background-color: #2A2A2A !important; color: #C9A84C; font-weight: bold; }
+.metric-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+.metric-card { background: #242424; border: 1px solid #3A3A3A; border-radius: 4px; padding: 16px 18px; border-left: 4px solid #C9A84C; }
+.metric-card .m-name { color: #C9A84C; font-weight: bold; font-size: 12pt; margin-bottom: 6px; }
+.metric-card .m-bench { font-size: 10.5pt; color: #BBBBBB; margin-top: 6px; }
+.scenario { background: #1a1a1a; border: 1px solid #3A3A3A; border-radius: 6px; padding: 16px 18px; margin: 12px 0; }
+.scenario.a { border-left: 4px solid #E74C3C; }
+.scenario.b { border-left: 4px solid #58D68D; }
+ul, ol { padding-left: 26px; margin-bottom: 14px; }
+li { margin-bottom: 8px; }
+hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
+.bold { font-weight: bold; }
+.gold { color: #C9A84C; font-weight: bold; }
+.red { color: #E74C3C; font-weight: bold; }
+.green { color: #58D68D; font-weight: bold; }
+.cta-section { background: linear-gradient(135deg, #1F1A0E 0%, #2A2010 100%); border: 1px solid #C9A84C; border-radius: 8px; padding: 32px 36px; margin-top: 48px; text-align: center; }
+.cta-section h2 { border: none; padding: 0; margin: 0 0 12px 0; font-size: 16pt; color: #C9A84C; }
+.cta-section p { color: #BBBBBB; margin-bottom: 22px; text-align: center; }
+.cta-btn { display: inline-block; background: #C9A84C; color: #1a1a1a; font-family: 'Lora', serif; font-size: 12pt; font-weight: bold; padding: 12px 36px; border-radius: 4px; text-decoration: none; transition: opacity 0.2s; }
+.cta-btn:hover { opacity: 0.85; }
+.nav-hint { text-align: center; margin-top: 18px; font-size: 10pt; color: #666; }
+</style>
+</head>
+<body>
+    <!-- 章節導覽列 -->
+    <div style="position:sticky;top:0;z-index:999;background:#111111;border-bottom:1px solid #C9A84C;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'Lora',serif;">
+        <a href="ch3.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block">← 第三章節：如何設計策略？</a>
+        <a href="index.html" style="color:#FAF6EE;text-decoration:none;font-size:10.5pt;font-weight:bold;white-space:nowrap;border:1px solid #C9A84C;padding:4px 14px;border-radius:14px;flex-shrink:0;">🏠 返回首頁</a>
+        <a href="ch5.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block;text-align:right">第五章節：回測不等於未來 →</a>
+    </div>
+<div class="container">
+
+<div class="chapter-badge">第四章節</div>
+<h1>如何看懂策略的績效數字？</h1>
+<p class="tagline">H.Q.C. 赫斯提亞量化資本 · 免費知識分享</p>
+
+<p>很多人在選擇或設計量化策略時，只看一個數字：勝率。「這個策略七成勝率耶，一定很厲害！」但勝率只是故事的一部分，甚至可能是最具誤導性的那一部分。本章節帶你認識幾個真正重要的績效指標，讓你能在看到一份回測報告時，知道哪些數字值得信任，哪些需要警惕。</p>
+
+<!-- ============================================================ -->
+<h2>一、勝率的真相：高勝率不等於賺錢</h2>
+
+<p>先來看一個讓人眼睛一亮的例子。假設有兩個交易者，都做了 100 筆交易：</p>
+
+<div class="scenario a">
+  <p><span class="bold">交易者甲：勝率 80%</span></p>
+  <p>每次獲利：+3,000 元｜每次虧損：-20,000 元</p>
+  <p>獲利 80 次：80 × 3,000 = <span class="green">+240,000 元</span></p>
+  <p>虧損 20 次：20 × 20,000 = <span class="red">-400,000 元</span></p>
+  <p>年度結果：<span class="red">-160,000 元（虧損）</span></p>
+</div>
+
+<div class="scenario b">
+  <p><span class="bold">交易者乙：勝率 40%</span></p>
+  <p>每次獲利：+20,000 元｜每次虧損：-5,000 元</p>
+  <p>獲利 40 次：40 × 20,000 = <span class="green">+800,000 元</span></p>
+  <p>虧損 60 次：60 × 5,000 = <span class="red">-300,000 元</span></p>
+  <p>年度結果：<span class="green">+500,000 元（獲利）</span></p>
+</div>
+
+<p>甲的感覺好極了：10 次裡有 8 次對的，多巴胺持續供應。乙的感覺很差：10 次有 6 次是虧損的。但數字不騙人：甲虧錢，乙賺錢。</p>
+
+<div class="key-insight">
+勝率只是故事的一半。另一半是：每次獲利和每次虧損的金額比（盈虧比）。兩者加在一起，才能計算出策略的「期望值」—— 每執行一筆交易，平均能賺（或虧）多少。
+</div>
+
+<!-- ============================================================ -->
+<h2>二、五個你必須看懂的績效指標</h2>
+
+<div class="metric-row">
+  <div class="metric-card">
+    <div class="m-name">① 勝率</div>
+    <p>獲利筆數 ÷ 總交易筆數</p>
+    <div class="m-bench">單獨無意義，必須搭配盈虧比一起解讀</div>
+  </div>
+  <div class="metric-card">
+    <div class="m-name">② 盈虧比</div>
+    <p>平均每筆獲利 ÷ 平均每筆虧損</p>
+    <div class="m-bench">盈虧比 &gt;1.5 表示每賺的比每虧的多 50%</div>
+  </div>
+  <div class="metric-card">
+    <div class="m-name">③ 獲利因子</div>
+    <p>所有獲利筆的總獲利 ÷ 所有虧損筆的總虧損</p>
+    <div class="m-bench">&gt;1 才開始有獲利，&gt;1.5 是基本要求，&gt;2.0 是良好</div>
+  </div>
+  <div class="metric-card">
+    <div class="m-name">④ 最大回撤</div>
+    <p>帳戶從最高點到最低點的最大跌幅</p>
+    <div class="m-bench">這個數字決定你能否心理上撐過最壞的時期</div>
+  </div>
+</div>
+
+<h3>⑤ 夏普比率：風險調整後的報酬</h3>
+<p>純粹的報酬率不能說明一切，因為高報酬可能是靠承擔高風險換來的。夏普比率把這兩者合在一起：</p>
+<span class="formula">夏普比率 ≈ 年化報酬率 ÷ 報酬率的波動度（標準差）</span>
+<p>夏普比率 &gt;1 代表每承受 1 單位的波動風險，能換到超過 1 單位的超額報酬。數字越高，策略的「效率」越好。</p>
+
+<!-- ============================================================ -->
+<h2>三、最大回撤：最容易被低估的危險數字</h2>
+
+<p>最大回撤（Maximum Drawdown, MDD）是指策略在歷史上，帳戶從最高點跌到最低點的最大幅度。這個數字決定了你在實際交易中，最壞的情況下會「有多痛」。</p>
+
+<p>為什麼這麼重要？因為虧損和回本之間存在一個殘酷的數學不對稱：</p>
+
+<table>
+  <tr>
+    <th>帳戶虧損</th>
+    <th>回到原點所需的報酬率</th>
+  </tr>
+  <tr><td style="text-align:center">-10%</td><td style="text-align:center">+11.1%</td></tr>
+  <tr><td style="text-align:center">-20%</td><td style="text-align:center">+25.0%</td></tr>
+  <tr><td style="text-align:center">-30%</td><td style="text-align:center"><span class="red">+42.9%</span></td></tr>
+  <tr><td style="text-align:center">-50%</td><td style="text-align:center"><span class="red">+100.0%</span></td></tr>
+  <tr><td style="text-align:center">-70%</td><td style="text-align:center"><span class="red">+233.3%</span></td></tr>
+</table>
+
+<p>最大回撤 30% 聽起來只是「縮水三成」，但要回到原點需要再賺 42.9%。這需要多久？如果策略年化報酬 15%，大約需要 2.5 年才能回本。在這 2.5 年中，你能堅持繼續執行策略嗎？</p>
+
+<div class="danger-box">
+<p><span class="bold" style="color:#E74C3C">H.Q.C. 的守護資本原則：</span>最大回撤決定了你的策略能否在現實中被執行。一個年化報酬 40%、但最大回撤 60% 的策略，對大多數人來說實際上是無法執行的——因為在帳戶腰斬的那段時間，幾乎沒有人能保持理性繼續按規則操作。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四、一個好策略應該長什麼樣子？</h2>
+
+<p>把以上幾個指標綜合起來，一個值得信任的量化策略，大致上應具備：</p>
+
+<table>
+  <tr>
+    <th>指標</th>
+    <th>基本要求</th>
+    <th>說明</th>
+  </tr>
+  <tr>
+    <td class="label-col">獲利因子</td>
+    <td>&gt; 1.5（含交易成本）</td>
+    <td>表示每虧 1 元，能賺 1.5 元以上</td>
+  </tr>
+  <tr>
+    <td class="label-col">最大回撤</td>
+    <td>波段策略 &lt; 25%</td>
+    <td>心理上能接受並繼續執行的上限</td>
+  </tr>
+  <tr>
+    <td class="label-col">夏普比率</td>
+    <td>&gt; 1.0</td>
+    <td>風險調整後的報酬在合理水準</td>
+  </tr>
+  <tr>
+    <td class="label-col">總交易筆數</td>
+    <td>&gt; 100 筆</td>
+    <td>統計意義的最低要求，300 筆以上更可信</td>
+  </tr>
+  <tr>
+    <td class="label-col">年化報酬率</td>
+    <td>明顯高於無風險利率</td>
+    <td>承擔風險的報酬必須合理</td>
+  </tr>
+</table>
+
+<div class="warning-box">
+<p><span class="bold">特別注意獲利因子超過 4.0 的情況：</span>不是表現越好越值得相信。獲利因子極高（如 4.0、5.0）且回撤極小，往往是「過度最佳化」的信號——策略被調整到完美記住了歷史，但在面對未來的新數據時，表現很可能急劇下降。</p>
+</div>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="mc-box">
+  <div class="mc-title">
+    <span class="mc-icon">MultiCharts</span>
+    <h3>MultiCharts 策略績效報告：在哪裡找到這些數字？</h3>
+  </div>
+  <p>在 MultiCharts 執行回測後，系統會自動生成「策略績效報告」（Strategy Performance Report），這份報告包含了所有你需要的績效數字。以下是各個分頁的位置說明：</p>
+
+  <h3>總覽分頁（Summary）</h3>
+  <table style="margin-top:10px">
+    <tr>
+      <th>報告項目名稱</th>
+      <th>對應績效指標</th>
+      <th>解讀重點</th>
+    </tr>
+    <tr>
+      <td>Net Profit</td>
+      <td>總淨利（扣除成本後）</td>
+      <td>必須為正，且應明顯大於交易成本</td>
+    </tr>
+    <tr>
+      <td>Profit Factor</td>
+      <td>獲利因子</td>
+      <td>目標 &gt;1.5，警戒 &gt;4.0（可能過度最佳化）</td>
+    </tr>
+    <tr>
+      <td>Max. Intraday Drawdown</td>
+      <td>日內最大回撤</td>
+      <td>這個數字通常比「期末回撤」更大，更能代表最壞的情況</td>
+    </tr>
+    <tr>
+      <td>Percent Profitable</td>
+      <td>勝率</td>
+      <td>單獨無意義，搭配 Avg. Trade 一起看</td>
+    </tr>
+    <tr>
+      <td>Avg. Trade</td>
+      <td>每筆交易的平均期望值</td>
+      <td>必須為正，且必須明顯大於每筆交易成本</td>
+    </tr>
+    <tr>
+      <td>Max Consecutive Losses</td>
+      <td>最大連續虧損筆數</td>
+      <td>這個數字告訴你最壞的情況下你會連輸幾次，心理準備的依據</td>
+    </tr>
+  </table>
+
+  <h3>資金曲線圖（Equity Curve）</h3>
+  <p>在「圖表」分頁可以看到帳戶資金隨時間增長的曲線。一個好的策略，資金曲線應該呈現平滑向上的趨勢，而非大幅震盪。如果資金曲線的大部分獲利集中在某一小段特定時期，要懷疑策略是否只在特定市場環境有效。</p>
+
+  <h3>交易清單（Trades）</h3>
+  <p>在「交易」分頁可以看到每一筆歷史交易的明細，包含進出場時間、損益。這是診斷策略問題最直接的方式：策略什麼時候虧錢最多？是在哪種市場環境下出現最大損失？</p>
+</div>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="cta-section">
+  <h2>想深入掌握策略評估的完整方法？</h2>
+  <p>績效評估遠不止這幾個指標。如何用蒙地卡羅模擬估計最壞情況？如何識別過度最佳化的策略？如何在不同市場環境下分析策略的適應性？這些是建立可靠量化系統的核心知識，H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 的課程有完整的體系化教學。</p>
+  <a class="cta-btn" href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener">前往 Pressplay 查看完整課程</a>
+  <p class="nav-hint">第四章節完 &nbsp;·&nbsp; 繼續閱讀第五章節：回測不等於未來，如何驗證策略？</p>
+</div>
+
+<p style="text-align:center; color:#555; margin-top:36px; font-size:10pt;">
+  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考
+</p>
+
+</div>
+</body>
+</html>

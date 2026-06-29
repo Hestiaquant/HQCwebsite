@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如何設計量化策略？｜H.Q.C. 赫斯提亞量化資本</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Lora', 'Source Han Serif TC', '思源宋體', 'Noto Serif CJK TC', serif; font-size: 13pt; line-height: 1.9; color: #FAF6EE; background-color: #1a1a1a; }
+.container { max-width: 860px; margin: 0 auto; padding: 48px 40px; }
+.chapter-badge { display: inline-block; background: #C9A84C; color: #1a1a1a; font-size: 9.5pt; font-weight: bold; padding: 3px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px; }
+h1 { font-size: 22pt; font-weight: 700; color: #FAF6EE; border-bottom: 2px solid #C9A84C; padding-bottom: 10px; margin-bottom: 8px; }
+.tagline { font-size: 11pt; color: #BBBBBB; margin-bottom: 36px; }
+h2 { font-size: 15pt; font-weight: 600; color: #FAF6EE; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #C9A84C; padding-left: 12px; }
+h3 { font-size: 13pt; font-weight: bold; color: #C9A84C; margin-top: 22px; margin-bottom: 8px; }
+p { margin-bottom: 14px; text-align: justify; }
+.highlight-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.key-insight { background-color: #C9A84C; color: #1a1a1a; border-left: 5px solid #FAF6EE; padding: 16px 20px; margin: 22px 0; border-radius: 2px; font-weight: bold; }
+.warning-box { background-color: #242424; border-left: 5px solid #C9A84C; padding: 16px 20px; margin: 22px 0; border-radius: 2px; }
+.mc-box { background-color: #1F1F1F; border: 1px solid #C9A84C; border-radius: 6px; padding: 20px 24px; margin: 28px 0; }
+.mc-box .mc-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.mc-box .mc-icon { background: #C9A84C; color: #1a1a1a; font-size: 9pt; font-weight: bold; padding: 3px 10px; border-radius: 12px; }
+.mc-box h3 { color: #C9A84C; margin: 0; font-size: 12.5pt; }
+.pseudocode { font-family: "Courier New", monospace; background-color: #111111; color: #FAF6EE; padding: 14px 18px; border-radius: 2px; margin: 14px 0; font-size: 10.5pt; line-height: 1.7; border-left: 4px solid #C9A84C; }
+.pseudocode .kw { color: #569CD6; }
+.pseudocode .cm { color: #6A9955; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 11.5pt; }
+th { background-color: #C9A84C; color: #1a1a1a; padding: 10px 14px; text-align: center; font-weight: bold; }
+td { border: 1px solid #3A3A3A; padding: 10px 14px; vertical-align: middle; color: #FAF6EE; }
+tr:nth-child(even) td { background-color: #242424; }
+tr:nth-child(odd) td { background-color: #1a1a1a; }
+td.label-col { background-color: #2A2A2A !important; color: #C9A84C; font-weight: bold; }
+.step-row { display: flex; align-items: flex-start; margin: 14px 0; gap: 14px; }
+.step-circle { min-width: 36px; height: 36px; border-radius: 50%; background: #C9A84C; color: #1a1a1a; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 14pt; flex-shrink: 0; }
+.step-body { flex: 1; background: #242424; border-radius: 6px; padding: 12px 16px; border: 1px solid #3A3A3A; }
+ul, ol { padding-left: 26px; margin-bottom: 14px; }
+li { margin-bottom: 8px; }
+hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
+.bold { font-weight: bold; }
+.gold { color: #C9A84C; font-weight: bold; }
+.red { color: #E74C3C; }
+.cta-section { background: linear-gradient(135deg, #1F1A0E 0%, #2A2010 100%); border: 1px solid #C9A84C; border-radius: 8px; padding: 32px 36px; margin-top: 48px; text-align: center; }
+.cta-section h2 { border: none; padding: 0; margin: 0 0 12px 0; font-size: 16pt; color: #C9A84C; }
+.cta-section p { color: #BBBBBB; margin-bottom: 22px; text-align: center; }
+.cta-btn { display: inline-block; background: #C9A84C; color: #1a1a1a; font-family: 'Lora', serif; font-size: 12pt; font-weight: bold; padding: 12px 36px; border-radius: 4px; text-decoration: none; transition: opacity 0.2s; }
+.cta-btn:hover { opacity: 0.85; }
+.nav-hint { text-align: center; margin-top: 18px; font-size: 10pt; color: #666; }
+</style>
+</head>
+<body>
+    <!-- 章節導覽列 -->
+    <div style="position:sticky;top:0;z-index:999;background:#111111;border-bottom:1px solid #C9A84C;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:'Lora',serif;">
+        <a href="ch2.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block">← 第二章節：台灣期貨入門</a>
+        <a href="index.html" style="color:#FAF6EE;text-decoration:none;font-size:10.5pt;font-weight:bold;white-space:nowrap;border:1px solid #C9A84C;padding:4px 14px;border-radius:14px;flex-shrink:0;">🏠 返回首頁</a>
+        <a href="ch4.html" style="color:#C9A84C;text-decoration:none;font-size:10.5pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block;text-align:right">第四章節：如何看懂績效數字？ →</a>
+    </div>
+<div class="container">
+
+<div class="chapter-badge">第三章節</div>
+<h1>如何設計一個量化策略？</h1>
+<p class="tagline">H.Q.C. 赫斯提亞量化資本 · 免費知識分享</p>
+
+<p>很多人認為設計量化策略需要很強的程式能力。但其實，最難的部分不是寫程式，而是在動筆之前，把一個「感覺有效」的交易想法，轉化成一套「清晰到電腦能看懂」的規則。本章節就從這個起點開始。</p>
+
+<!-- ============================================================ -->
+<h2>一、策略設計的三層轉化</h2>
+
+<p>幾乎所有量化策略的開發，都需要經歷以下三個層次的轉化，從模糊走向精確：</p>
+
+<div class="step-row">
+  <div class="step-circle">1</div>
+  <div class="step-body">
+    <span class="bold gold">概念層（你的交易直覺）</span><br>
+    「當市場形成明顯上升趨勢時，在短線回調後買進」<br>
+    <span style="color:#888; font-size:10.5pt">這個描述有畫面感，但「明顯上升趨勢」和「短線回調」電腦看不懂。</span>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-circle">2</div>
+  <div class="step-body">
+    <span class="bold gold">規則層（精確的文字條件）</span><br>
+    「當 20 日均線在 60 日均線之上，且今日收盤價低於昨日收盤價，隔日開盤進場做多。停損設在進場價下方 50 點，目標設在進場價上方 150 點。」<br>
+    <span style="color:#888; font-size:10.5pt">每個條件都是可計算的數字，沒有模糊地帶。</span>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-circle">3</div>
+  <div class="step-body">
+    <span class="bold gold">程式層（電腦可執行的語言）</span><br>
+    用 MultiCharts 的 PowerLanguage，把第二層的規則轉成程式碼，讓電腦自動在每根 K 棒判斷條件並執行進出場。<br>
+    <span style="color:#888; font-size:10.5pt">可回測、可最佳化、可自動下單。</span>
+  </div>
+</div>
+
+<div class="key-insight">
+許多人直接跳到第三層（寫程式），卻跳過了第二層的精確規則設計。這是量化策略開發最常見的錯誤。沒有清晰的第二層，你寫的程式碼很可能包含大量的模糊假設，導致回測結果失真。
+</div>
+
+<!-- ============================================================ -->
+<h2>二、量化策略的四個組成模塊</h2>
+
+<p>任何一個完整的量化策略，都由以下四個功能模塊組成。設計前先把每個模塊的內容確認清楚：</p>
+
+<h3>① 進場條件（Entry）</h3>
+<p>什麼時候進場？做多還是做空？在什麼時間點執行（當根K棒收盤？下一根開盤？）？</p>
+
+<div class="highlight-box">
+<p><span class="bold">範例：</span>20日均線向上穿越60日均線，且穿越當根K棒的成交量高於過去10日均量，隔日開盤以市價進場做多。</p>
+<p>注意：「穿越」、「成交量放大」、「趨勢明顯」這些詞，必須全部替換成可以計算的具體條件，才算完成。</p>
+</div>
+
+<h3>② 停損條件（Stop Loss）</h3>
+<p>這是最重要的模塊，沒有之一。停損點必須在進場之前就決定，而且是固定規則，不能在持倉期間因為情緒而改變。</p>
+
+<table>
+  <tr>
+    <th>停損類型</th>
+    <th>說明</th>
+    <th>優點</th>
+    <th>缺點</th>
+  </tr>
+  <tr>
+    <td class="label-col">固定點數停損</td>
+    <td>進場後下方固定 N 點即停損（例如 50 點）</td>
+    <td>簡單，每筆最大損失固定可計算</td>
+    <td>不隨市場波動調整，高波動期容易被正常波動觸及</td>
+  </tr>
+  <tr>
+    <td class="label-col">ATR 倍數停損</td>
+    <td>以市場平均波動幅度（ATR）的倍數設定停損</td>
+    <td>自動適應市場當下的波動特性</td>
+    <td>每筆損失金額不固定，需要額外的資金管理計算</td>
+  </tr>
+  <tr>
+    <td class="label-col">支撐/阻力停損</td>
+    <td>設在明顯的技術支撐位下方</td>
+    <td>有技術邏輯依據</td>
+    <td>「明顯支撐」仍有主觀性，需要精確量化</td>
+  </tr>
+</table>
+
+<h3>③ 停利條件（Take Profit）</h3>
+<p>什麼時候出場鎖利？固定目標點數、移動停利（追蹤最高點動態調整），或反向信號出場？不同的出場方式，對策略的勝率和盈虧比有根本性的影響。</p>
+
+<h3>④ 資金管理（Position Sizing）</h3>
+<p>每次進場幾口？是否隨帳戶規模動態調整？單次最大允許虧損是帳戶資金的幾%？資金管理決定了策略的長期生存能力，通常比進場條件本身更重要。</p>
+
+<!-- ============================================================ -->
+<h2>三、把模糊詞彙換成精確條件</h2>
+
+<p>這是策略設計中最需要練習的技能。以下是常見的模糊描述，以及它們的量化替換方式：</p>
+
+<table>
+  <tr>
+    <th>模糊描述</th>
+    <th>量化替換範例</th>
+  </tr>
+  <tr>
+    <td>「趨勢向上」</td>
+    <td>20日均線在60日均線之上，且20日均線的今日值高於5根K棒前的值（均線斜率向上）</td>
+  </tr>
+  <tr>
+    <td>「成交量放大」</td>
+    <td>今日成交量 &gt; 過去10日平均成交量的1.5倍</td>
+  </tr>
+  <tr>
+    <td>「短線超賣」</td>
+    <td>RSI(14) 低於 30</td>
+  </tr>
+  <tr>
+    <td>「收長紅K」</td>
+    <td>收盤價 &gt; 開盤價，且（收盤 - 開盤）&gt; 指數×0.3%</td>
+  </tr>
+  <tr>
+    <td>「突破壓力」</td>
+    <td>今日收盤價突破過去20根K棒的最高點</td>
+  </tr>
+  <tr>
+    <td>「市場恐慌」</td>
+    <td>台指期日波動（當日高-低）&gt; 過去20日平均波動的2倍</td>
+  </tr>
+</table>
+
+<div class="warning-box">
+<p><span class="bold">核心原則：</span>如果你的策略中還有任何需要「感覺判斷」的部分，它就還不是一個可以量化的策略。完整量化的標準是：換個人來看同一個條件，得到的答案必須完全一樣。</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>四、策略設計常見的三個陷阱</h2>
+
+<h3>陷阱一：條件太多，樣本太少</h3>
+<p>有人認為進場條件越多越嚴格越好，但條件越多，觸發機會越少，整個回測期的交易筆數可能只有 10 幾筆。樣本數不足，任何結論都沒有統計意義，等於在用「剛好」而非「規律」下結論。</p>
+
+<h3>陷阱二：只針對特定行情最佳化</h3>
+<p>不自覺地把策略調整到剛好在「最近這波大行情」表現很好，但回頭看其他時段卻沒什麼效果。這種策略在未來遇到不同的行情環境，幾乎必然失效。</p>
+
+<h3>陷阱三：忽略交易成本</h3>
+<p>手續費、期交稅、還有進出場的滑價（下委託和實際成交價之間的差距），對於交易頻率高的策略影響巨大。一個看起來每筆賺 5 點的策略，扣掉成本後可能是虧的。</p>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="mc-box">
+  <div class="mc-title">
+    <span class="mc-icon">MultiCharts</span>
+    <h3>PowerLanguage 入門：你的第一段策略程式碼</h3>
+  </div>
+  <p>MultiCharts 的策略語言 PowerLanguage，語法設計上非常接近人類語言，以下是一個最簡單的均線交叉進場策略範例，讓你感受量化策略的程式樣貌：</p>
+
+  <div class="pseudocode"><span class="cm">{ 簡單均線交叉策略示意 }</span>
+<span class="cm">{ Inputs：可在圖表介面直接調整的參數 }</span>
+Inputs: FastLength(20), SlowLength(60), StopPoints(50);
+
+<span class="cm">{ 計算快線與慢線 }</span>
+Vars: FastMA(0), SlowMA(0);
+FastMA = Average(Close, FastLength);
+SlowMA = Average(Close, SlowLength);
+
+<span class="cm">{ 進場：快線向上穿越慢線，下一根K棒開盤進多 }</span>
+<span class="kw">If</span> Cross(FastMA, SlowMA) <span class="kw">Then</span>
+   Buy("Golden Cross") 1 Contract Next Bar At Open;
+
+<span class="cm">{ 停損：進場後下方50點自動出場 }</span>
+SetStopLoss(StopPoints);</div>
+
+  <p>這段程式碼只有 10 行，但已經包含了一個完整策略的最基本骨架：計算指標、設定進場條件、設定停損。在 MultiCharts 中把這段程式碼套用到台指期圖表，你就能立刻看到每一次這個條件觸發時，歷史上的損益結果。</p>
+
+  <h3>MultiCharts 常用內建函數速覽</h3>
+  <table style="margin-top:10px">
+    <tr>
+      <th>函數</th>
+      <th>用途</th>
+      <th>範例</th>
+    </tr>
+    <tr>
+      <td><code>Average(Price, Length)</code></td>
+      <td>計算簡單移動平均線（SMA）</td>
+      <td><code>Average(Close, 20)</code> → 20日收盤均線</td>
+    </tr>
+    <tr>
+      <td><code>Cross(A, B)</code></td>
+      <td>判斷 A 是否從下往上穿越 B</td>
+      <td><code>Cross(FastMA, SlowMA)</code> → 金叉訊號</td>
+    </tr>
+    <tr>
+      <td><code>RSI(Price, Length)</code></td>
+      <td>計算相對強弱指數（RSI）</td>
+      <td><code>RSI(Close, 14)</code> → 14期 RSI</td>
+    </tr>
+    <tr>
+      <td><code>AvgTrueRange(Length)</code></td>
+      <td>計算平均真實波動區間（ATR）</td>
+      <td><code>AvgTrueRange(14)</code> → 14期 ATR</td>
+    </tr>
+    <tr>
+      <td><code>Highest(Price, Length)</code></td>
+      <td>取最近 N 根 K 棒的最高價</td>
+      <td><code>Highest(High, 20)</code> → 20根最高點</td>
+    </tr>
+    <tr>
+      <td><code>Lowest(Price, Length)</code></td>
+      <td>取最近 N 根 K 棒的最低價</td>
+      <td><code>Lowest(Low, 20)</code> → 20根最低點</td>
+    </tr>
+    <tr>
+      <td><code>MarketPosition</code></td>
+      <td>返回目前持倉狀態（1=多、-1=空、0=無）</td>
+      <td>用於避免重複進場</td>
+    </tr>
+    <tr>
+      <td><code>Close[N]</code></td>
+      <td>存取 N 根K棒前的收盤價</td>
+      <td><code>Close[1]</code> → 前一根收盤價</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<hr class="divider">
+
+<div class="cta-section">
+  <h2>想把策略從概念落地到實際程式碼？</h2>
+  <p>從交易直覺到完整可執行的量化系統，中間還有許多細節需要掌握：如何處理多條件組合、如何設計移動停利、如何避免程式邏輯錯誤？H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 的課程，有完整的 PowerLanguage 實戰教學，帶你一步步從零建立自己的策略系統。</p>
+  <a class="cta-btn" href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener">前往 Pressplay 查看完整課程</a>
+  <p class="nav-hint">第三章節完 &nbsp;·&nbsp; 繼續閱讀第四章節：如何看懂策略的績效數字？</p>
+</div>
+
+<p style="text-align:center; color:#555; margin-top:36px; font-size:10pt;">
+  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考
+</p>
+
+</div>
+</body>
+</html>
