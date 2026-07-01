@@ -71,7 +71,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <p>和股票的最大差異有兩點：</p>
 
 <ul>
-  <li><span class="bold">可以做空：</span>股票市場一般只能先買後賣（做多），但期貨可以先賣後買（做空）。市場下跌時，做空的交易者可以獲利。這讓量化策略在多空兩個方向都有機會。</li>
+  <li><span class="bold">可以做空：</span>股票市場一般只能先買後賣（做多，除非有申請信用額度來進行融資券交易則也是兩個方向都有機會），但期貨可以先賣後買（做空）。市場下跌時，做空的交易者可以獲利。這讓量化策略在多空兩個方向都有機會。</li>
   <li><span class="bold">槓桿交易：</span>你不需要支付合約全額，只需支付一部分的「保證金」就能操作整張合約。槓桿放大獲利的同時也放大虧損，這是期貨交易風險管理最重要的原因之一。</li>
 </ul>
 
@@ -186,7 +186,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
     <li>選擇時間框架：1分鐘、5分鐘、60分鐘、日線等依策略需求而定</li>
   </ol>
   <h3>連續合約設定</h3>
-  <p>回測策略時，建議使用「連續合約」（Continuous Contract）而非單一月份合約，這樣資料才能跨越多年而不中斷。在 MultiCharts 中，連續合約以 <span class="gold">TXF1</span> 或 <span class="gold">MTXF1</span> 表示。</p>
+  <p>回測策略時，建議使用「連續合約」（Continuous Contract）而非單一月份合約，這樣資料才能跨越多年而不中斷。在 MultiCharts 中，連續合約以 <span class="gold">@TX#</span> 或 <span class="gold">@MTX#</span> 表示（# 代表連續最近月）。</p>
   <h3>常用時間框架說明</h3>
   <table style="margin:12px 0 0 0">
     <tr>
