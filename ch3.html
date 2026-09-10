@@ -2,6 +2,12 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<meta name="hq-version" content="v2.0">
+<meta name="hq-version-date" content="2026-09-10">
+<!-- 版本紀錄
+v2.0 2026-09-10 PPA 二審修正：依 檢視與評估報告/PPA二審第三次評估與GEMINI版比對_2026-09-10.md 第 7 節合併清單與 官網修改提案_PPA二審五條_2026-09-09.md 施工；備份 FABLE5留存規則指南手冊/backups/ch3.html.bak-20260910
+v1.x 2026-07-29 PPA 首審修正版（閱讀材料 2026-09-06 節名統一）
+-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>如何設計量化策略？｜H.Q.C. 赫斯提亞量化資本</title>
 <style>
@@ -22,6 +28,7 @@ p { margin-bottom: 14px; text-align: justify; }
 .mc-box .mc-title { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .mc-box .mc-icon { background: #C9A84C; color: #1a1a1a; font-size: 9pt; font-weight: bold; padding: 3px 10px; border-radius: 12px; }
 .mc-box h3 { color: #C9A84C; margin: 0; font-size: 12.5pt; }
+/* 註：.pseudocode 與下方 .kw、.cm 為早期程式碼區塊樣式，本頁改版後已無程式碼區塊，樣式保留備用但不再使用。 */
 .pseudocode { font-family: "Courier New", monospace; background-color: #111111; color: #FAF6EE; padding: 14px 18px; border-radius: 2px; margin: 14px 0; font-size: 10.5pt; line-height: 1.7; border-left: 4px solid #C9A84C; }
 .pseudocode .kw { color: #569CD6; }
 .pseudocode .cm { color: #6A9955; }
@@ -60,6 +67,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <div class="chapter-badge">第三章節</div>
 <h1>如何設計一個量化策略？</h1>
 <p class="tagline">H.Q.C. 赫斯提亞量化資本 · 免費知識分享</p>
+<p style="color:#888; font-size:10pt; margin-bottom:28px;">本頁為教學說明，不構成投資建議；文中任何條件、參數與數字皆為說明寫法用的示意，非操作建議；商品規格以期交所公告為準。</p>
 
 <p>很多人認為設計量化策略需要很強的程式能力。但其實，最難的部分不是寫程式，而是在動筆之前，把一個「感覺有效」的交易想法，轉化成一套「清晰到電腦能看懂」的規則。本章節就從這個起點開始。</p>
 
@@ -72,7 +80,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
   <div class="step-circle">1</div>
   <div class="step-body">
     <span class="bold gold">概念層（你的交易直覺）</span><br>
-    「當市場形成明顯上升趨勢時，在短線回調後買進」<br>
+    （當市場形成明顯上升趨勢時，在短線回調後考慮進場）<br>
     <span style="color:#888; font-size:10.5pt">這個描述有畫面感，但「明顯上升趨勢」和「短線回調」電腦看不懂。</span>
   </div>
 </div>
@@ -81,22 +89,22 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
   <div class="step-circle">2</div>
   <div class="step-body">
     <span class="bold gold">規則層（精確的文字條件）</span><br>
-    「當 20 日均線在 60 日均線之上，且今日收盤價低於昨日收盤價，隔日開盤進場做多。停損設在進場價下方 50 點，目標設在進場價上方 150 點。」<br>
-    <span style="color:#888; font-size:10.5pt">每個條件都是可計算的數字，沒有模糊地帶。</span>
+    （當快線位於慢線之上，且今日收盤價低於昨日收盤價，於下一根 K 棒開盤價記為進場時點；進場前先寫定以 ATR 倍數定義的停損距離，出場目標則以停損距離的倍數表示）<br>
+    <span style="color:#888; font-size:10.5pt">每個條件都寫成可以計算的形式，換人來判讀不會有第二種答案。</span>
   </div>
 </div>
 
 <div class="step-row">
   <div class="step-circle">3</div>
   <div class="step-body">
-    <span class="bold gold">程式層（電腦可執行的語言）</span><br>
-    用 MultiCharts 的 PowerLanguage，把第二層的規則轉成程式碼，讓電腦自動在每根 K 棒判斷條件並執行進出場。<br>
-    <span style="color:#888; font-size:10.5pt">可回測、可最佳化、可自動下單。</span>
+    <span class="bold gold">程式層（電腦可讀的語言）</span><br>
+    用 MultiCharts 的 PowerLanguage，把第二層的文字規則描述成程式結構，讓電腦在每根 K 棒上以同一套標準重複判斷並記錄結果，供歷史檢驗使用。<br>
+    <span style="color:#888; font-size:10.5pt">可回測、可最佳化、可做前進分析。</span>
   </div>
 </div>
 
 <div class="key-insight">
-許多人直接跳到第三層（寫程式），卻跳過了第二層的精確規則設計。這是量化策略開發最常見的錯誤。沒有清晰的第二層，你寫的程式碼很可能包含大量的模糊假設，導致回測結果失真。
+許多人直接跳到第三層（寫程式），卻跳過了第二層的精確規則設計，這是量化策略開發最常見的疏漏。第二層沒寫清楚，程式裡就會塞滿沒被意識到的模糊假設，回測結果因此失真。
 </div>
 
 <!-- ============================================================ -->
@@ -105,15 +113,15 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <p>任何一個完整的量化策略，都由以下四個功能模塊組成。設計前先把每個模塊的內容確認清楚：</p>
 
 <h3>① 進場條件（Entry）</h3>
-<p>什麼時候進場？做多還是做空？在什麼時間點執行（當根K棒收盤？下一根開盤？）？</p>
+<p>進場條件在什麼情況下算成立？規則裡要不要把方向也一起寫定，還是留給後續測試決定？條件成立後，要用哪一個時間點記錄進場（當根 K 棒收盤？下一根開盤？）？</p>
 
 <div class="highlight-box">
-<p><span class="bold">範例：</span>20日均線向上穿越60日均線，且穿越當根K棒的成交量高於過去10日均量，隔日開盤以市價進場做多。</p>
+<p><span class="bold">示意寫法：</span>快線由下往上穿越慢線，且穿越當根 K 棒的成交量高於過去 N 日均量，條件成立後以下一根 K 棒的開盤價記為進場時點（僅示範條件怎麼寫，非操作建議）。</p>
 <p>注意：「穿越」、「成交量放大」、「趨勢明顯」這些詞，必須全部替換成可以計算的具體條件，才算完成。</p>
 </div>
 
 <h3>② 停損條件（Stop Loss）</h3>
-<p>這是最重要的模塊，沒有之一。停損點必須在進場之前就決定，而且是固定規則，不能在持倉期間因為情緒而改變。</p>
+<p>停損是風險管理中最不宜省略的模塊。停損距離需要在進場之前就寫定，並以固定規則呈現，避免在持倉期間依當下情緒調整。</p>
 
 <table>
   <tr>
@@ -124,7 +132,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
   </tr>
   <tr>
     <td class="label-col">固定點數停損</td>
-    <td>進場後下方固定 N 點即停損（例如 50 點）</td>
+    <td>進場前先寫定一段固定點數距離，觸及即出場</td>
     <td>簡單，每筆最大損失固定可計算</td>
     <td>不隨市場波動調整，高波動期容易被正常波動觸及</td>
   </tr>
@@ -136,17 +144,17 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
   </tr>
   <tr>
     <td class="label-col">支撐/阻力停損</td>
-    <td>設在明顯的技術支撐位下方</td>
+    <td>以明顯的技術支撐或阻力位置為基準，往不利方向留一段距離</td>
     <td>有技術邏輯依據</td>
     <td>「明顯支撐」仍有主觀性，需要精確量化</td>
   </tr>
 </table>
 
 <h3>③ 停利條件（Take Profit）</h3>
-<p>什麼時候出場鎖利？固定目標點數、移動停利（追蹤最高點動態調整），或反向信號出場？不同的出場方式，對策略的勝率和盈虧比有根本性的影響。</p>
+<p>什麼時候出場鎖利？以事先寫定的距離作為目標、移動停利（隨有利方向的極值動態調整），或原進場條件反向成立時出場？不同的出場方式，對策略的勝率和盈虧比有根本性的影響。</p>
 
 <h3>④ 資金管理（Position Sizing）</h3>
-<p>每次進場幾口？是否隨帳戶規模動態調整？單次最大允許虧損是帳戶資金的幾%？資金管理決定了策略的長期生存能力，通常比進場條件本身更重要。</p>
+<p>單筆部位規模如何決定？是否隨帳戶規模動態調整？單次最大允許虧損佔帳戶資金的比例要如何事先寫定？資金管理決定策略在連續虧損下能否存續，是回測與風險評估中不宜略過的一環。</p>
 
 <!-- ============================================================ -->
 <h2>三、把模糊詞彙換成精確條件</h2>
@@ -156,35 +164,36 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <table>
   <tr>
     <th>模糊描述</th>
-    <th>量化替換範例</th>
+    <th>量化替換的示意寫法</th>
   </tr>
   <tr>
     <td>「趨勢向上」</td>
-    <td>20日均線在60日均線之上，且20日均線的今日值高於5根K棒前的值（均線斜率向上）</td>
+    <td>快線在慢線之上，且快線的今日值高於前 N 根 K 棒的值（均線斜率向上）</td>
   </tr>
   <tr>
     <td>「成交量放大」</td>
-    <td>今日成交量 &gt; 過去10日平均成交量的1.5倍</td>
+    <td>今日成交量 &gt; 過去 N 日平均成交量的某一自訂倍數</td>
   </tr>
   <tr>
     <td>「短線超賣」</td>
-    <td>RSI(14) 低於 30</td>
+    <td>RSI 讀值落在自訂的低讀值門檻以下（門檻設得越寬，條件成立次數越多，需自行測試）</td>
   </tr>
   <tr>
     <td>「收長紅K」</td>
-    <td>收盤價 &gt; 開盤價，且（收盤 - 開盤）&gt; 指數×0.3%</td>
+    <td>收盤價 &gt; 開盤價，且（收盤 - 開盤）大於指數點數的某一自訂百分比</td>
   </tr>
   <tr>
     <td>「突破壓力」</td>
-    <td>今日收盤價突破過去20根K棒的最高點</td>
+    <td>今日收盤價高於過去 N 根 K 棒的最高價</td>
   </tr>
   <tr>
     <td>「市場恐慌」</td>
-    <td>台指期日波動（當日高-低）&gt; 過去20日平均波動的2倍</td>
+    <td>當日波動（當日高 - 低）大於過去 N 日平均波動的某一自訂倍數</td>
   </tr>
 </table>
 
 <div class="warning-box">
+<p>本表所有寫法皆為示意，期數、倍數與門檻需自行研究決定，不構成參數建議。</p>
 <p><span class="bold">核心原則：</span>如果你的策略中還有任何需要「感覺判斷」的部分，它就還不是一個可以量化的策略。完整量化的標準是：換個人來看同一個條件，得到的答案必須完全一樣。</p>
 </div>
 
@@ -198,7 +207,7 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <p>不自覺地把策略調整到剛好在「最近這波大行情」表現很好，但回頭看其他時段卻沒什麼效果。這種策略在未來遇到不同的行情環境，幾乎必然失效。</p>
 
 <h3>陷阱三：忽略交易成本</h3>
-<p>手續費、期交稅、還有進出場的滑價（下委託和實際成交價之間的差距），對於交易頻率高的策略影響巨大。一個看起來每筆賺 5 點的策略，扣掉成本後可能是虧的。</p>
+<p>手續費、期交稅、還有進出場的滑價（下委託和實際成交價之間的差距），對於交易頻率高的策略影響巨大。一個帳面上平均每筆獲利很小的策略，把這些成本扣掉之後，結果可能由正轉負。</p>
 
 <!-- ============================================================ -->
 <hr class="divider">
@@ -206,74 +215,69 @@ hr.divider { border: none; border-top: 1px solid #3A3A3A; margin: 36px 0; }
 <div class="mc-box">
   <div class="mc-title">
     <span class="mc-icon">MultiCharts</span>
-    <h3>PowerLanguage 入門：你的第一段策略程式碼</h3>
+    <h3>認識 PowerLanguage：一段策略程式由哪些區塊組成</h3>
   </div>
-  <p>MultiCharts 的策略語言 PowerLanguage，語法設計上非常接近人類語言，以下是一個最簡單的均線交叉進場策略範例，讓你感受量化策略的程式樣貌：</p>
+  <p>MultiCharts 的策略語言 PowerLanguage，語法設計上接近人類語言。正因為語法貼近人類語言，理解它的結構不需要先會寫程式，以下不提供可執行的策略程式，只拆解一段策略程式通常由哪四個區塊構成，實際撰寫不在本站範圍：</p>
 
-  <div class="pseudocode"><span class="cm">{ 簡單均線交叉策略示意 }</span>
-<span class="cm">{ Inputs：可在圖表介面直接調整的參數 }</span>
-Inputs: FastLength(20), SlowLength(60), StopPoints(50);
+  <div class="highlight-box">
+    <p><span class="bold">一段策略程式通常由四個區塊組成：</span></p>
+    <ol>
+      <li><span class="bold gold">參數宣告</span>：把日後想調整的數值集中寫在最前面，例如均線長度、停損距離的倍數。集中宣告的好處是修改時不必翻找整份程式，也讓每次測試改了什麼一目了然。</li>
+      <li><span class="bold gold">指標計算</span>：呼叫內建函數把價格序列轉成指標值，例如移動平均、波動度、區間高低點。這一段決定了條件判斷可以使用哪些材料。</li>
+      <li><span class="bold gold">條件判斷</span>：把規則層寫定的文字條件，改寫成成立或不成立的邏輯式，每根 K 棒重新判斷一次。模糊詞若沒在這裡變成可計算的比較式，就無法進入程式層。</li>
+      <li><span class="bold gold">動作區塊</span>：條件成立之後要做什麼、部位規模與單筆風險上限寫在哪裡。規則層沒寫清楚的欄位，到這一段就會變成程式裡的預設值，回測結果失真多半是從這裡開始的。</li>
+    </ol>
+    <p style="color:#888; font-size:10.5pt">本段僅說明程式的組成結構，不提供可執行的程式語句。</p>
+  </div>
 
-<span class="cm">{ 計算快線與慢線 }</span>
-Vars: FastMA(0), SlowMA(0);
-FastMA = Average(Close, FastLength);
-SlowMA = Average(Close, SlowLength);
-
-<span class="cm">{ 進場：快線向上穿越慢線，下一根K棒開盤進多 }</span>
-<span class="kw">If</span> Cross(FastMA, SlowMA) <span class="kw">Then</span>
-   Buy("Golden Cross") 1 Contract Next Bar At Open;
-
-<span class="cm">{ 停損：進場後下方50點自動出場 }</span>
-SetStopLoss(StopPoints);</div>
-
-  <p>這段程式碼只有 10 行，但已經包含了一個完整策略的最基本骨架：計算指標、設定進場條件、設定停損。在 MultiCharts 中把這段程式碼套用到台指期圖表，你就能立刻看到每一次這個條件觸發時，歷史上的損益結果。</p>
+  <p>理解這四個區塊各自負責什麼，比記住任何一段程式重要。程式層的價值在於同一組條件能被重複檢驗：條件一旦寫定，電腦會用同樣的標準看待每一根 K 棒，不會因為當下情緒而放寬。至於條件在歷史資料上的表現如何，取決於研究者自己設定的樣本區間、成本假設與驗證方式，回測數字本身不等於未來結果。</p>
 
   <h3>MultiCharts 常用內建函數速覽</h3>
   <table style="margin-top:10px">
     <tr>
       <th>函數</th>
       <th>用途</th>
-      <th>範例</th>
+      <th>寫法說明</th>
     </tr>
     <tr>
       <td><code>Average(Price, Length)</code></td>
       <td>計算簡單移動平均線（SMA）</td>
-      <td><code>Average(Close, 20)</code> → 20日收盤均線</td>
+      <td><code>Average(Close, Length)</code> → 收盤價的移動平均</td>
     </tr>
     <tr>
       <td><code>Cross(A, B)</code></td>
       <td>判斷 A 是否從下往上穿越 B</td>
-      <td><code>Cross(FastMA, SlowMA)</code> → 金叉訊號</td>
+      <td><code>Cross(FastMA, SlowMA)</code> → 判斷快線是否在該根 K 棒由下而上穿越慢線</td>
     </tr>
     <tr>
       <td><code>RSI(Price, Length)</code></td>
       <td>計算相對強弱指數（RSI）</td>
-      <td><code>RSI(Close, 14)</code> → 14期 RSI</td>
+      <td><code>RSI(Close, Length)</code> → 指定期數的 RSI 讀值</td>
     </tr>
     <tr>
       <td><code>AvgTrueRange(Length)</code></td>
       <td>計算平均真實波動區間（ATR）</td>
-      <td><code>AvgTrueRange(14)</code> → 14期 ATR</td>
+      <td><code>AvgTrueRange(Length)</code> → 指定期數的平均真實波動區間</td>
     </tr>
     <tr>
       <td><code>Highest(Price, Length)</code></td>
       <td>取最近 N 根 K 棒的最高價</td>
-      <td><code>Highest(High, 20)</code> → 20根最高點</td>
+      <td><code>Highest(High, Length)</code> → 指定根數內的最高價</td>
     </tr>
     <tr>
       <td><code>Lowest(Price, Length)</code></td>
       <td>取最近 N 根 K 棒的最低價</td>
-      <td><code>Lowest(Low, 20)</code> → 20根最低點</td>
+      <td><code>Lowest(Low, Length)</code> → 指定根數內的最低價</td>
     </tr>
     <tr>
       <td><code>MarketPosition</code></td>
-      <td>返回目前持倉狀態（1=多、-1=空、0=無）</td>
-      <td>用於避免重複進場</td>
+      <td>回傳目前部位狀態（1 代表多方部位、-1 代表空方部位、0 代表無部位）</td>
+      <td>用於判斷目前是否已有部位</td>
     </tr>
     <tr>
       <td><code>Close[N]</code></td>
       <td>存取 N 根K棒前的收盤價</td>
-      <td><code>Close[1]</code> → 前一根收盤價</td>
+      <td><code>Close[N]</code> → 前 N 根 K 棒的收盤價</td>
     </tr>
   </table>
 </div>
@@ -282,14 +286,15 @@ SetStopLoss(StopPoints);</div>
 <hr class="divider">
 
 <div class="cta-section">
-  <h2>想把策略從概念落地到實際程式碼？</h2>
-  <p>從交易直覺到完整可執行的量化系統，中間還有許多細節需要掌握：如何處理多條件組合、如何設計移動停利、如何避免程式邏輯錯誤？H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 的課程，有完整的 PowerLanguage 實戰教學，帶你一步步從零建立自己的策略系統。</p>
+  <h2>想把交易想法整理成可檢驗的規則？</h2>
+  <p>從一個交易想法到一套寫得清楚、能被檢驗的規則，中間還有不少觀念要釐清：多個條件如何組合、出場方式怎麼分類、回測結果有哪些常見的失真來源。H.Q.C. 赫斯提亞量化教育學院在 Pressplay Academy 的課程，以量化觀念、歷史案例、公開資料判讀、回測方法與風險管理為主軸。</p>
+  <p style="font-size:10.5pt">本課程為教育內容，不含程式實作，不提供現成策略、買賣訊號、特定商品建議或自動交易工具。</p>
   <a class="cta-btn" href="https://www.pressplay.cc/link/s/9F24399F" target="_blank" rel="noopener">前往 Pressplay 查看完整課程</a>
   <p class="nav-hint">第三章節完 &nbsp;·&nbsp; 繼續閱讀第四章節：如何看懂策略的績效數字？</p>
 </div>
 
 <p style="text-align:center; color:#555; margin-top:36px; font-size:10pt;">
-  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考
+  © H.Q.C. 赫斯提亞量化資本 · 官網免費知識分享區 · 內容僅供教育參考 · 版本 v2.0（2026-09-10）
 </p>
 
 </div>
