@@ -1,0 +1,860 @@
+/*
+ * 展示頁樣式（showcase_frontend/style.css）
+ *
+ * 做什麼：對話頁與評估報告頁共用的樣式。自訂一套冷色系色票（青藍主色、灰藍底），字體只用裝置內建的系統字體，
+ *   不載入任何外部字型或圖片；深色模式跟隨裝置設定。
+ * 輸入：index.html 與 report.html 的類名；app.js 以 CSSOM 設定的長條圖位置與寬度。
+ * 輸出：畫面樣式。
+ * 失敗時：本檔載入失敗時頁面仍可用（純文字排版），hidden 屬性由瀏覽器預設樣式隱藏。
+ */
+
+/* [前端] 色票與字體 */
+:root {
+  --c-bg: #f1f4f7;
+  --c-surface: #ffffff;
+  --c-surface-alt: #f6f8fb;
+  --c-ink: #15202b;
+  --c-ink-soft: #4b5a6a;
+  --c-line: #d3dbe3;
+  --c-accent: #0b7285;
+  --c-accent-strong: #095c6b;
+  --c-accent-soft: #e2f2f5;
+  --c-on-accent: #ffffff;
+  --c-user: #e8eefc;
+  --c-user-line: #c5d3f5;
+  --c-warn: #8a5100;
+  --c-warn-soft: #fff3de;
+  --c-danger: #b3261e;
+  --c-danger-soft: #fdeceb;
+  --c-pos: #0b7285;
+  --c-neg: #c05621;
+  --c-hit: #6741d9;
+  --c-expr-smile: #2b8a3e;
+  --c-expr-stern: #b3261e;
+  --c-expr-ponder: #1c64b0;
+  --c-expr-surprise: #a85400;
+  --c-scrim: rgba(12, 22, 32, 0.55);
+  --c-shadow: rgba(12, 22, 32, 0.25);
+  --f-sans: system-ui, -apple-system, "Segoe UI", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+  --f-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #0e1620;
+    --c-surface: #152230;
+    --c-surface-alt: #1b2a3a;
+    --c-ink: #e6edf3;
+    --c-ink-soft: #a7b4c2;
+    --c-line: #2c3e50;
+    --c-accent: #2f9fb3;
+    --c-accent-strong: #6cc9d8;
+    --c-accent-soft: #123843;
+    --c-on-accent: #06151b;
+    --c-user: #1c2b4a;
+    --c-user-line: #2e4577;
+    --c-warn: #f0b35a;
+    --c-warn-soft: #3a2a10;
+    --c-danger: #f28b82;
+    --c-danger-soft: #3b1b1a;
+    --c-pos: #3bb3c6;
+    --c-neg: #f08c4a;
+    --c-hit: #a08cf2;
+    --c-expr-smile: #69c77f;
+    --c-expr-stern: #f28b82;
+    --c-expr-ponder: #7fb2f0;
+    --c-expr-surprise: #f0b35a;
+    --c-scrim: rgba(2, 8, 14, 0.7);
+    --c-shadow: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* [前端] 基礎 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--f-sans);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+a {
+  color: var(--c-accent-strong);
+}
+
+code,
+pre {
+  font-family: var(--f-mono);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+}
+
+.skip-link:focus {
+  left: 12px;
+  z-index: 100;
+  background: var(--c-surface);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.muted {
+  color: var(--c-ink-soft);
+}
+
+/* [前端] 頁首、頁面寬度、頁尾 */
+.site-head {
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.site-head-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-name {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.site-nav a {
+  text-decoration: none;
+  color: var(--c-ink-soft);
+  padding: 4px 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--c-ink);
+  border-bottom-color: var(--c-accent);
+}
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.site-foot {
+  border-top: 1px solid var(--c-line);
+  background: var(--c-surface);
+  color: var(--c-ink-soft);
+  font-size: 0.85rem;
+  padding: 10px 0;
+}
+
+.site-foot p {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2px 16px;
+}
+
+/* 危機協議求助專線（設計書 ADR-0021），字色與頁尾其他句相同，只加粗 */
+.site-foot .crisis-line {
+  font-weight: 600;
+}
+
+/* [前端] 確認中與時段外畫面 */
+.screen-loading,
+.screen-offline {
+  text-align: center;
+  padding: 64px 16px;
+}
+
+.offline-title {
+  font-size: 1.5rem;
+  margin: 0 0 12px;
+}
+
+.offline-hours {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.offline-note {
+  color: var(--c-ink-soft);
+  margin: 0;
+}
+
+/* [前端] 對話畫面：說明、通行碼 */
+.chat-intro h1 {
+  font-size: 1.4rem;
+  margin: 0 0 8px;
+}
+
+.chat-intro p {
+  margin: 0 0 8px;
+  color: var(--c-ink-soft);
+}
+
+.session-line code {
+  background: var(--c-surface-alt);
+  border: 1px solid var(--c-line);
+  padding: 0 6px;
+  border-radius: 4px;
+}
+
+.access,
+.access-ok {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+
+.access-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.access-row {
+  display: flex;
+  gap: 8px;
+}
+
+.access-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.access-ok {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--c-ink-soft);
+}
+
+.hint {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: var(--c-ink-soft);
+}
+
+.error {
+  margin: 6px 0 0;
+  color: var(--c-danger);
+}
+
+/* [前端] 表單元件與按鈕 */
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+  background: var(--c-surface-alt);
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+input:focus,
+textarea:focus {
+  outline: 3px solid var(--c-accent-soft);
+  outline-offset: 1px;
+  border-color: var(--c-accent);
+}
+
+textarea:disabled {
+  opacity: 0.6;
+}
+
+.btn {
+  font: inherit;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+  background: var(--c-surface);
+  color: var(--c-ink);
+  cursor: pointer;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--c-accent-soft);
+  outline-offset: 1px;
+  border-color: var(--c-accent);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+.btn-danger {
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.btn-quiet {
+  background: transparent;
+}
+
+/* [前端] 對話紀錄 */
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.turn-user {
+  align-self: flex-end;
+  max-width: min(640px, 92%);
+}
+
+.turn-user.pending {
+  opacity: 0.7;
+}
+
+.bubble-user {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--c-user);
+  border: 1px solid var(--c-user-line);
+  border-radius: 14px 14px 4px 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.turn-wait {
+  color: var(--c-ink-soft);
+  font-size: 0.95rem;
+}
+
+.wait-text {
+  margin: 0;
+}
+
+.turn-reply {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 14px;
+}
+
+@media (min-width: 900px) {
+  .turn-reply {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+}
+
+.turn-reply.is-blocked {
+  border-color: var(--c-danger);
+}
+
+.reply-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.speaker {
+  font-weight: 700;
+}
+
+.expr {
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  padding: 0 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.expr-SMILE {
+  color: var(--c-expr-smile);
+}
+
+.expr-STERN {
+  color: var(--c-expr-stern);
+}
+
+.expr-PONDER {
+  color: var(--c-expr-ponder);
+}
+
+.expr-SURPRISE {
+  color: var(--c-expr-surprise);
+}
+
+.expr-none {
+  color: var(--c-ink-soft);
+}
+
+.tag-blocked {
+  font-size: 0.8rem;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: var(--c-danger);
+  background: var(--c-danger-soft);
+}
+
+.turn-no {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--c-ink-soft);
+}
+
+.reply-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.contract-note {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--c-warn);
+}
+
+/* [前端] 標註面板 */
+.annot {
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  background: var(--c-surface-alt);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+}
+
+.annot-sec + .annot-sec,
+.annot-more .annot-sec {
+  margin-top: 10px;
+}
+
+.annot-more {
+  margin-top: 10px;
+}
+
+.annot-summary {
+  cursor: pointer;
+  color: var(--c-ink-soft);
+  font-size: 0.85rem;
+}
+
+.annot-title {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  color: var(--c-accent-strong);
+}
+
+.annot-grid {
+  display: grid;
+  grid-template-columns: 7.5em minmax(0, 1fr);
+  gap: 4px 10px;
+  margin: 0;
+}
+
+.annot-label {
+  color: var(--c-ink-soft);
+}
+
+.annot-value {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.annot-wide {
+  grid-column: 1 / -1;
+}
+
+dd.annot-wide {
+  margin-bottom: 4px;
+}
+
+.annot-list {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5em) minmax(40px, 1fr) 4.4em;
+  gap: 6px;
+  align-items: center;
+}
+
+.bar-name {
+  color: var(--c-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  position: relative;
+  height: 8px;
+  background: var(--c-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-signed::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--c-ink-soft);
+}
+
+.bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--c-pos);
+  border-radius: 4px;
+}
+
+.bar-fill.bar-neg {
+  background: var(--c-neg);
+}
+
+.bar-hit .bar-fill {
+  background: var(--c-hit);
+}
+
+.bar-hit .bar-name,
+.bar-hit .bar-val {
+  color: var(--c-ink);
+  font-weight: 600;
+}
+
+.bar-val {
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+/* [前端] 提示列與輸入框 */
+.notice {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--c-accent-soft);
+}
+
+.notice-warn {
+  background: var(--c-warn-soft);
+  color: var(--c-warn);
+}
+
+.composer {
+  position: sticky;
+  bottom: 8px;
+  padding: 10px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px var(--c-shadow);
+}
+
+.composer textarea {
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+}
+
+.composer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.counter {
+  font-family: var(--f-mono);
+  font-size: 0.85rem;
+  color: var(--c-ink-soft);
+}
+
+.counter-over {
+  color: var(--c-danger);
+}
+
+.consent-reopen {
+  margin: 10px 0;
+}
+
+/* [前端] 刪除我的對話 */
+.delete-zone {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--c-line);
+}
+
+/* 刪除區塊移到畫面之外（時段外也顯示），限制寬度避免輸入框過寬 */
+.delete-zone {
+  max-width: 640px;
+}
+
+.delete-access {
+  margin-top: 10px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.delete-confirm {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--c-danger);
+  border-radius: 8px;
+  background: var(--c-danger-soft);
+}
+
+.delete-confirm p {
+  margin: 0 0 8px;
+}
+
+.delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.delete-result {
+  margin: 10px 0 0;
+  color: var(--c-ink-soft);
+}
+
+/* [前端] 首次告知覆蓋視窗 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--c-scrim);
+}
+
+.dialog {
+  width: 100%;
+  max-width: 480px;
+  padding: 20px 22px;
+  background: var(--c-surface);
+  color: var(--c-ink);
+  border-radius: 14px;
+  box-shadow: 0 12px 40px var(--c-shadow);
+}
+
+.dialog h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.dialog p {
+  margin: 0 0 16px;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* [前端] 評估報告頁 */
+.report-page {
+  max-width: 980px;
+}
+
+.report-page > h1 {
+  font-size: 1.6rem;
+  margin: 0 0 8px;
+}
+
+.lead,
+.report-meta {
+  color: var(--c-ink-soft);
+}
+
+.report-meta {
+  font-size: 0.85rem;
+}
+
+.report-toc ol {
+  padding-left: 1.3em;
+}
+
+/* 一次性評估報告尚未產出時的提示 */
+.report-pending {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px dashed var(--c-line);
+  border-radius: 8px;
+  background: var(--c-surface);
+}
+
+.report-pending h2 {
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+
+.report-pending ul {
+  margin: 0;
+  padding-left: 1.3em;
+}
+
+.report {
+  margin: 20px 0;
+  padding: 16px 20px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+.report h2 {
+  font-size: 1.35rem;
+  margin-top: 0;
+}
+
+.report h3 {
+  font-size: 1.15rem;
+}
+
+.report h4,
+.report h5,
+.report h6 {
+  font-size: 1rem;
+}
+
+.report-source {
+  font-size: 0.8rem;
+  color: var(--c-ink-soft);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.report table {
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  min-width: 100%;
+}
+
+.report th,
+.report td {
+  padding: 6px 8px;
+  border: 1px solid var(--c-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.report th {
+  background: var(--c-surface-alt);
+}
+
+.report .align-center {
+  text-align: center;
+}
+
+.report .align-right {
+  text-align: right;
+}
+
+.report pre {
+  padding: 10px 12px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  background: var(--c-surface-alt);
+  border: 1px solid var(--c-line);
+  border-radius: 8px;
+}
+
+.report code {
+  font-size: 0.9em;
+  padding: 0 4px;
+  background: var(--c-surface-alt);
+  border-radius: 4px;
+}
+
+.report pre code {
+  padding: 0;
+  background: none;
+}
+
+.report blockquote {
+  margin: 12px 0;
+  padding: 4px 12px;
+  border-left: 4px solid var(--c-accent);
+  color: var(--c-ink-soft);
+}
+
+.report hr {
+  border: none;
+  border-top: 1px solid var(--c-line);
+  margin: 20px 0;
+}

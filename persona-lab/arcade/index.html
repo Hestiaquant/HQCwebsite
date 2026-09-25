@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!--
+  街機決策對照展示頁（arcade/index.html）
+  做什麼：由原版街機頁 arcade.html 複製後改寫，只保留貪吃蛇與俄羅斯方塊。遊戲與決策全部在訪客瀏覽器執行，
+    不呼叫任何後端，也不是回放；同一個種子必得同一局。
+  改寫重點：拿掉原版把手寫規則標示成模型推論的所有字樣與寫死的信心值；拿掉後端連線、啟動指令彈窗與
+    雲端網址輸入；策略選單有 規則專家基準線 與 行為複製策略網路（模仿規則專家的小型多層感知器，
+    權重在 policies/bc_weights.js，前向計算是 policies/bc_forward.js 的原生 JavaScript）；不引用外部 script 或字型；
+    所有事件改在 page.js 以 addEventListener 綁定，頁內沒有行內腳本。
+  依賴：同資料夾的 engine/ 與 policies/ 各模組，以及 page.js，依下方 script 標籤順序載入。
+  失敗時：任何模組載入失敗時 page.js 在決策紀錄顯示錯誤並停用開始按鈕，不會改呼叫後端。
+-->
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>街機決策對照 · 貪吃蛇與俄羅斯方塊</title>
+  <link rel="stylesheet" href="index-page.css">
+</head>
+<body>
+
+  <!-- [街機] 標題列 -->
+  <header>
+    <div class="title-area">
+      <div class="brand-title">街機決策對照展示台</div>
+      <div class="brand-sub">貪吃蛇與俄羅斯方塊 · 決策在你的瀏覽器裡即時計算，不經後端，不是回放</div>
+    </div>
+    <div class="status-badge">
+      <div class="dot"></div>
+      <span>瀏覽器本機計算</span>
+    </div>
+  </header>
+
+  <!-- [街機] 雙遊戲切換分頁 -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabSnake" data-game="snake" type="button">貪吃蛇</button>
+    <button class="tab-btn" id="tabTetris" data-game="tetris" type="button">俄羅斯方塊</button>
+  </div>
+
+  <!-- [街機] 策略與種子 -->
+  <div class="policy-bar">
+    <label for="policySelect">決策策略</label>
+    <select id="policySelect">
+      <option value="rule" selected>規則專家基準線</option>
+      <option value="bc">行為複製策略網路</option>
+    </select>
+    <label for="seedInput">本局種子</label>
+    <input id="seedInput" type="number" min="0" max="4294967295" step="1" inputmode="numeric">
+    <button class="btn-action" id="btnReplaySeed" type="button">以此種子重開</button>
+    <div class="policy-note" id="policyNote">規則專家基準線是手寫的評分規則，不是訓練出來的模型。可切換成行為複製策略網路，與規則專家同台比較。</div>
+  </div>
+
+  <!-- [街機] 主舞台 -->
+  <div class="stage-container">
+
+    <div class="game-panel">
+      <!-- 貪吃蛇舞台 -->
+      <div class="game-view" id="snakeView">
+        <div class="canvas-wrapper">
+          <canvas id="snakeCanvas" width="460" height="460"></canvas>
+        </div>
+        <div class="ctrl-row">
+          <button class="btn-action primary" id="btnSnakeToggle" type="button">▶ 開始自動對局</button>
+          <button class="btn-action" id="btnSnakeReset" type="button">換新種子重開</button>
+          <div class="speed-btn-group" id="snakeSpeeds">
+            <button class="btn-speed" data-speed="1" type="button">1x</button>
+            <button class="btn-speed active" data-speed="5" type="button">5x</button>
+            <button class="btn-speed" data-speed="20" type="button">20x</button>
+            <button class="btn-speed" data-speed="60" type="button">60x</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 俄羅斯方塊舞台 -->
+      <div class="game-view hidden" id="tetrisView">
+        <div class="canvas-wrapper">
+          <canvas id="tetrisCanvas" width="280" height="560"></canvas>
+        </div>
+        <div class="ctrl-row">
+          <button class="btn-action primary" id="btnTetrisToggle" type="button">▶ 開始自動對局</button>
+          <button class="btn-action" id="btnTetrisReset" type="button">換新種子重開</button>
+          <div class="speed-btn-group" id="tetrisSpeeds">
+            <button class="btn-speed active" data-speed="1" type="button">1x</button>
+            <button class="btn-speed" data-speed="5" type="button">5x</button>
+            <button class="btn-speed" data-speed="50" type="button">50x</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [街機] 即時數據 -->
+    <div class="telemetry-panel">
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>決策計算時間（近 50 次平均）</span>
+          <span id="hudPolicyTag">規則專家基準線</span>
+        </div>
+        <div class="hud-num-hero">
+          <span id="valLatency">0.000</span>
+          <span class="unit">ms</span>
+        </div>
+        <div class="hud-hint">在你的瀏覽器量測；瀏覽器計時解析度有限（常見約 0.1 毫秒），單次數值會跳動。批次統計的平均值較準。</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-item">
+          <div class="stat-lbl">每秒決策次數</div>
+          <div class="stat-val" id="valTPS">0 /s</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-lbl">目前動作</div>
+          <div class="stat-val" id="valAction">-</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-lbl" id="lblMetric1">得分（每個食物 10 分）</div>
+          <div class="stat-val" id="valMetric1">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-lbl" id="lblMetric2">存活步數</div>
+          <div class="stat-val" id="valMetric2">0</div>
+        </div>
+      </div>
+
+      <div class="hidden" id="tetrisExtraHud">
+        <div class="tetris-next-box">
+          <div class="stat-lbl">下一塊</div>
+          <canvas id="nextPieceCanvas" width="100" height="50"></canvas>
+        </div>
+      </div>
+
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>決策紀錄</span>
+          <span>[瀏覽器本機計算]</span>
+        </div>
+        <div class="log-terminal" id="logTerminal">
+          <div class="log-entry">準備就緒。按下開始自動對局即可觀看。</div>
+        </div>
+      </div>
+
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>最近對局</span>
+          <span id="recentGameTag">貪吃蛇</span>
+        </div>
+        <table class="result-table">
+          <thead>
+            <tr><th>種子</th><th>分數</th><th>步數</th><th>結束原因</th></tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+
+      <div class="hud-card">
+        <div class="hud-title">
+          <span>無頭批次統計</span>
+          <span>種子 1 到 20</span>
+        </div>
+        <button class="btn-action" id="btnBatch" type="button">用目前策略跑 20 局</button>
+        <div class="batch-out" id="batchOut">不畫圖連續下 20 局，列出平均與 95% 信賴區間。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- [街機] 說明 -->
+  <section class="about">
+    <h2>關於這個展示</h2>
+    <ul>
+      <li>兩個遊戲與所有決策都在你的瀏覽器裡計算，頁面不連任何後端，畫面也不是事先錄好的回放。</li>
+      <li>規則專家基準線是手寫的評分規則。貪吃蛇看食物距離、可走空間與能否吃到；俄羅斯方塊窮舉所有落點，看消行數、空洞數、起伏度與落點深度。它不是訓練出來的模型。</li>
+      <li>這兩套規則原本被標示成模型推論，並附上寫死的信心值常數；本頁如實改標為規則專家基準線，不顯示信心值。</li>
+      <li>行為複製策略網路是用規則專家在固定種子上的對局紀錄（貪吃蛇 60 局、俄羅斯方塊 50 局）訓練的小型多層感知器：每個合法候選動作先算一列特徵（其中包含規則專家本身用到的量），網路替每個候選打一個分數，選分數最高者。以局為單位留出的驗證局上，它與規則專家選同一個動作的比例為貪吃蛇 100%（26222 步）、俄羅斯方塊 99.18%（7593 步）。</li>
+      <li>它學的是模仿規則專家，天花板就是規則專家。在另外 100 個固定種子的對照中，兩個遊戲的同種子成對分數差，95% 信賴區間都包含 0，分不出高低；這裡展示的是模型化流程與可驗證性，不是超越規則。</li>
+      <li>權重是一般的 JSON 數字，前向計算是本頁的原生 JavaScript；另在 200 個局面上與訓練用的 PyTorch 逐一比對，選出的動作全部相同。因為要替每個候選算特徵再過網路，它每次決策比規則專家慢，實際時間請看右側計時。</li>
+      <li>同一個種子必得同一局。批次統計固定使用種子 1 到 20，可在本機用同一份程式重跑得到相同數字。</li>
+    </ul>
+  </section>
+
+  <footer>
+    本頁為教育研究用途的技術展示，不構成任何投資建議。本頁程式碼與文字由 AI 協助生成。
+  </footer>
+
+  <!-- [街機] 本機模組（依賴順序固定：亂數、引擎、對局統計、規則專家、行為複製特徵、權重、前向計算、頁面） -->
+  <script src="engine/rng.js"></script>
+  <script src="engine/snake.js"></script>
+  <script src="engine/tetris.js"></script>
+  <script src="engine/match.js"></script>
+  <script src="policies/rule_snake.js"></script>
+  <script src="policies/rule_tetris.js"></script>
+  <script src="policies/bc_features.js"></script>
+  <script src="policies/bc_weights.js"></script>
+  <script src="policies/bc_forward.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

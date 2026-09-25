@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--
+  [前端] 即時對話展示頁（showcase_frontend/index.html）
+  做什麼：訪客在公布時段內和本機運行的赫斯提亞即時對話；每則回覆旁有標註面板。
+    畫面三選一：確認中、時段外（只顯示公布時段與一句說明）、對話。首次告知以覆蓋視窗顯示，按我了解才開放輸入。
+    刪除我的對話在對話畫面與時段外畫面都顯示（契約 1.3 刪除不受時段限制，LEE 2026-09-24 裁示，待辦 T70）。
+    頁尾有 1925 安心專線一行（設計書 ADR-0021）。
+  依賴：config.js（建置時由 config.template.js 產生）、api.js（呼叫後端只在這支）、app.js（互動邏輯）、style.css。
+    頁內沒有行內腳本與行內樣式，配合 _headers 的內容安全政策。
+  失敗時：後端 5 秒沒回應或回 503 時由 app.js 切到時段外畫面，不播放任何預錄內容。
+-->
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>赫斯提亞即時對話展示</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
+
+  <!-- [前端] 頁首與頁面切換 -->
+  <header class="site-head">
+    <div class="site-head-inner">
+      <p class="site-name">赫斯提亞仿生人展示版</p>
+      <nav class="site-nav" aria-label="頁面">
+        <a href="index.html" aria-current="page">即時對話</a>
+        <a href="report.html">評估報告</a>
+        <a href="arcade/index.html">街機決策對照</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+
+    <!-- [前端] 確認中畫面 -->
+    <section id="screen-loading" class="screen screen-loading">
+      <p class="muted">正在確認展示狀態</p>
+    </section>
+
+    <!-- [前端] 時段外畫面：只顯示公布時段與一句說明 -->
+    <section id="screen-offline" class="screen screen-offline" hidden>
+      <h1 class="offline-title">目前是展示時段外</h1>
+      <p class="offline-hours">公布的線上時段：<span id="offline-hours"></span></p>
+      <p class="offline-note">赫斯提亞在開發者的本機電腦上即時運行，時段外不提供對話。</p>
+    </section>
+
+    <!-- [前端] 對話畫面 -->
+    <section id="screen-chat" class="screen screen-chat" hidden>
+      <div class="chat-intro">
+        <h1>和赫斯提亞即時對話</h1>
+        <p>每則回覆旁（手機在回覆下方）是這一回合的標註：內在情緒狀態與 PAD 三軸、表情、直覺層意圖與各類機率、合規判定、記憶引用、知識庫段落與各階段延遲。</p>
+        <p class="session-line">匿名工作階段：<code id="session-label"></code></p>
+      </div>
+
+      <!-- [前端] 通行碼（只存在這個分頁） -->
+      <form id="access-form" class="access" autocomplete="off">
+        <label for="access-code" class="access-label">通行碼</label>
+        <div class="access-row">
+          <input id="access-code" name="access-code" type="password" autocomplete="off" spellcheck="false" maxlength="128">
+          <button type="submit" class="btn">確認</button>
+        </div>
+        <p class="hint">通行碼只保存在這個分頁，關閉分頁即清除。</p>
+        <p id="access-error" class="error" role="alert" hidden></p>
+      </form>
+      <div id="access-ok" class="access-ok" hidden>
+        <span>已輸入通行碼（只保存在這個分頁）</span>
+        <button type="button" id="access-change" class="btn btn-quiet">更換通行碼</button>
+      </div>
+
+      <!-- [前端] 對話紀錄與標註面板 -->
+      <div id="chat-log" class="chat-log" role="log" aria-live="polite" aria-label="對話紀錄"></div>
+
+      <p id="chat-notice" class="notice" role="status" aria-live="polite" hidden></p>
+
+      <!-- [前端] 輸入框 -->
+      <form id="chat-form" class="composer">
+        <label for="chat-input" class="visually-hidden">訊息</label>
+        <textarea id="chat-input" rows="3" maxlength="500" placeholder="輸入想問的量化交易觀念（1 到 500 字，Enter 送出，Shift 加 Enter 換行）"></textarea>
+        <div class="composer-row">
+          <span id="chat-counter" class="counter">0 / 500</span>
+          <button type="submit" id="chat-send" class="btn btn-primary">送出</button>
+        </div>
+      </form>
+
+      <div id="consent-reopen-box" class="consent-reopen" hidden>
+        <button type="button" id="consent-reopen" class="btn">閱讀告知並開始對話</button>
+      </div>
+    </section>
+
+    <!-- [前端] 刪除我的對話：對話畫面與時段外畫面都顯示（契約 1.3 刪除不受公布時段限制） -->
+    <section id="delete-zone" class="delete-zone" aria-label="刪除我的對話" hidden>
+      <button type="button" id="delete-btn" class="btn btn-danger">刪除我的對話</button>
+      <form id="delete-access-form" class="delete-access" autocomplete="off" hidden>
+        <label for="delete-access-code" class="access-label">刪除需要通行碼</label>
+        <div class="access-row">
+          <input id="delete-access-code" name="delete-access-code" type="password" autocomplete="off" spellcheck="false" maxlength="128">
+          <button type="submit" class="btn">確認</button>
+        </div>
+        <p class="hint">通行碼只保存在這個分頁，關閉分頁即清除。</p>
+      </form>
+      <div id="delete-confirm" class="delete-confirm" hidden>
+        <p>確定要刪除這個工作階段在伺服器上的全部對話與記憶嗎？刪除後無法復原。</p>
+        <div class="delete-actions">
+          <button type="button" id="delete-yes" class="btn btn-danger">確定刪除</button>
+          <button type="button" id="delete-no" class="btn btn-quiet">取消</button>
+        </div>
+      </div>
+      <p id="delete-result" class="delete-result" role="status" hidden></p>
+    </section>
+  </main>
+
+  <!-- [前端] 首次告知（按我了解才開始） -->
+  <div id="consent-overlay" class="overlay" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="consent-title" aria-describedby="consent-text">
+      <h2 id="consent-title">開始對話前請先閱讀</h2>
+      <p id="consent-text">對話會被保存，並可能作為開發者日後的研究紀錄；請勿輸入個人資料；按我了解才開始。</p>
+      <div class="dialog-actions">
+        <button type="button" id="consent-accept" class="btn btn-primary">我了解</button>
+        <button type="button" id="consent-later" class="btn btn-quiet">先不開始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- [前端] 頁尾：AI 生成揭露與免責 -->
+  <footer class="site-foot">
+    <p>本頁的赫斯提亞是 AI 角色，回覆由開發者本機運行的語言模型即時生成；頁面程式碼與文字由 AI 協助生成。</p>
+    <p>本頁為教育研究用途的技術展示，內容不構成任何投資建議。</p>
+    <p class="crisis-line">若有自傷念頭，請撥 1925 安心專線（24 小時）。</p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
