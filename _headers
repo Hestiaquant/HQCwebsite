@@ -1,0 +1,11 @@
+# BEGIN hestia-demo
+# [前端] 展示頁安全標頭（Netlify _headers 格式）。建置時 tools/build_showcase.py 把後端來源代入 connect-src。
+# 內容安全政策不允許行內腳本與行內樣式，所有腳本與樣式都是同站外部檔；只允許連到後端這一個來源；不允許被嵌入框架。
+/persona-lab/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://demo-node.tail48edf8.ts.net; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+# END hestia-demo
