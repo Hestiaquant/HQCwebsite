@@ -9,5 +9,5 @@
 // [前端] 建置時代入的兩個值
 globalThis.HESTIA_SHOWCASE_CONFIG = Object.freeze({
   API_BASE: "https://demo-node.tail48edf8.ts.net",
-  PUBLIC_HOURS: "09:00-23:00"
+  PUBLIC_HOURS: "07:00-22:00"
 });

@@ -3,7 +3,8 @@
   [前端] 即時對話展示頁（showcase_frontend/index.html）
   做什麼：訪客在公布時段內和本機運行的赫斯提亞即時對話；每則回覆旁有標註面板。
     畫面三選一：確認中、時段外（只顯示公布時段與一句說明）、對話。首次告知以覆蓋視窗顯示，按我了解才開放輸入。
-    刪除我的對話在對話畫面與時段外畫面都顯示（契約 1.3 刪除不受時段限制，LEE 2026-09-24 裁示，待辦 T70）。
+    刪除我的對話在對話畫面與時段外畫面都顯示（LEE 2026-09-24 裁示，待辦 T70）；按鈕下方提示刪除對話請在開放時段內操作，
+    因為每天 22:05 排程關閉通道後刪除送不到閘道（LEE 2026-09-26 裁示只改文字，時段由 app.js 依建置時代入的公布時段填入）。
     頁尾有 1925 安心專線一行（設計書 ADR-0021）。
   依賴：config.js（建置時由 config.template.js 產生）、api.js（呼叫後端只在這支）、app.js（互動邏輯）、style.css。
     頁內沒有行內腳本與行內樣式，配合 _headers 的內容安全政策。
@@ -90,9 +91,10 @@
       </div>
     </section>
 
-    <!-- [前端] 刪除我的對話：對話畫面與時段外畫面都顯示（契約 1.3 刪除不受公布時段限制） -->
+    <!-- [前端] 刪除我的對話：對話畫面與時段外畫面都顯示；時段外通道關閉，按鈕下方提示在開放時段內操作 -->
     <section id="delete-zone" class="delete-zone" aria-label="刪除我的對話" hidden>
       <button type="button" id="delete-btn" class="btn btn-danger">刪除我的對話</button>
+      <p id="delete-hours-hint" class="hint">刪除對話請在開放時段內操作。</p>
       <form id="delete-access-form" class="delete-access" autocomplete="off" hidden>
         <label for="delete-access-code" class="access-label">刪除需要通行碼</label>
         <div class="access-row">

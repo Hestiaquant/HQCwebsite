@@ -10,7 +10,9 @@
  *   5. 送出回合後，在每則回覆旁畫出標註面板：內在狀態名稱、PAD 三軸、表情四態、意圖與各類機率、need_rag、
  *      情緒強度、合規攔截與理由、記憶引用與寫入、檢索段落編號與章名、各階段延遲。
  *   6. 刪除我的對話：DELETE 後顯示筆數，清掉兩個 localStorage 鍵並重新產生工作階段編號。
- *      對話畫面與時段外畫面都可刪除（契約 1.3 刪除不受時段限制）；沒有通行碼時在刪除區塊內輸入。
+ *      刪除按鈕在對話畫面與時段外畫面都顯示；沒有通行碼時在刪除區塊內輸入。閘道本身不限時段（契約 1.3），
+ *      但每天 22:05 排程寫入總開關並關閉通道後刪除送不到閘道，所以按鈕下方提示刪除對話請在開放時段內操作
+ *      （時段取建置時代入的公布時段），時段外刪除失敗時也顯示同一句說明（LEE 2026-09-26 裁示只改文字，待辦 T70）。
  * 輸入：瀏覽器的 document、儲存區與 config.js 的 HESTIA_SHOWCASE_CONFIG；後端呼叫一律經 api.js。
  * 輸出：畫面更新；本檔不發任何網路請求。
  * 失敗時：儲存區不可用（例如隱私模式）時改存在記憶體，功能照常但關閉分頁就遺失；
@@ -199,8 +201,8 @@
 
   /**
    * 公布時段的顯示文字。
-   * 輸入：config 或後端給的原字串，例如 09:00-23:00。
-   * 輸出：HH:MM-HH:MM 格式時轉成 每天 09:00 到 23:00（台灣時間）；空字串時為 尚未公布；其他原樣顯示。
+   * 輸入：config 或後端給的原字串，例如 07:00-22:00。
+   * 輸出：HH:MM-HH:MM 格式時轉成 每天 07:00 到 22:00（台灣時間）；空字串時為 尚未公布；其他原樣顯示。
    */
   function fmtHours(text) {
     const s = str(text).trim();
@@ -208,6 +210,20 @@
     const m = /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/.exec(s);
     if (m) return "每天 " + m[1] + " 到 " + m[2] + "（台灣時間）";
     return s;
+  }
+
+  /**
+   * 刪除區塊的開放時段提示（LEE 2026-09-26 裁示：時段外通道關閉，刪除請在開放時段內操作）。
+   * 輸入：config 或後端給的公布時段原字串，例如 07:00-22:00。
+   * 輸出：HH:MM-HH:MM 格式時為 刪除對話請在開放時段（每天 07:00 到 22:00）內操作。；
+   *   空字串時省略括號內的時段；其他格式把原字串放進括號。
+   */
+  function fmtDeleteHoursHint(text) {
+    const s = str(text).trim();
+    if (!s) return "刪除對話請在開放時段內操作。";
+    const m = /^(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/.exec(s);
+    if (m) return "刪除對話請在開放時段（每天 " + m[1] + " 到 " + m[2] + "）內操作。";
+    return "刪除對話請在開放時段（" + s + "）內操作。";
   }
 
   /** 是否文字。輸入：布林或其他。輸出：是、否或無資料。 */
@@ -410,6 +426,7 @@
     fmtPercent: fmtPercent,
     fmtMs: fmtMs,
     fmtHours: fmtHours,
+    fmtDeleteHoursHint: fmtDeleteHoursHint,
     annotationModel: annotationModel
   };
 
@@ -482,6 +499,7 @@
     consentReopen: "consent-reopen",
     deleteZone: "delete-zone",
     deleteBtn: "delete-btn",
+    deleteHoursHint: "delete-hours-hint",
     deleteAccessForm: "delete-access-form",
     deleteAccessInput: "delete-access-code",
     deleteConfirm: "delete-confirm",
@@ -664,10 +682,22 @@
       updateControls();
     }
 
+    // [前端] 公布時段：建置時代入的 config 優先，其次後端給的值
+    /** 目前要顯示的公布時段原字串。輸入：後端這次給的 public_hours（可空）。輸出：字串，可能為空。 */
+    function publicHours(hoursFromServer) {
+      return str(config.PUBLIC_HOURS) || str(hoursFromServer) || state.serverHours;
+    }
+
+    /** 更新刪除按鈕下方的開放時段提示。輸入：後端這次給的 public_hours（可空）。輸出：無。 */
+    function updateDeleteHoursHint(hoursFromServer) {
+      el.deleteHoursHint.textContent = fmtDeleteHoursHint(publicHours(hoursFromServer));
+    }
+
     // [前端] 時段外畫面：只顯示公布時段與一句說明
     /** 切到時段外畫面，只顯示公布時段（config 優先，其次後端給的值）。輸入：後端給的 public_hours。輸出：無。 */
     function showOffline(hoursFromServer) {
-      el.offlineHours.textContent = fmtHours(str(config.PUBLIC_HOURS) || str(hoursFromServer) || state.serverHours);
+      el.offlineHours.textContent = fmtHours(publicHours(hoursFromServer));
+      updateDeleteHoursHint(hoursFromServer);
       showScreen("offline");
     }
 
@@ -726,6 +756,7 @@
           }
           state.serverConsentVersion = str(res.data.consent_version) || DEFAULT_CONSENT_VERSION;
           state.serverHours = str(res.data.public_hours);
+          updateDeleteHoursHint("");
           showScreen("chat");
           syncConsent();
         })
@@ -968,6 +999,14 @@
     /** 依 api.js 的 kind 分流顯示（契約第七章）。輸入：失敗結果、動作（send 或 delete）。輸出：無。 */
     function handleFailure(res, action) {
       const kind = res.kind;
+      // 時段外畫面的刪除失敗（通行碼錯誤與請求過多除外）：22:05 後通道已關，改顯示開放時段說明
+      const offlineDelete = action === "delete" && state.screen === "offline";
+      if (offlineDelete && kind !== "unauthorized" && kind !== "wait") {
+        showDeleteResult("刪除沒有執行。" + el.deleteHoursHint.textContent);
+        if (kind === "paused") showOffline(res.data ? res.data.public_hours : "");
+        if (kind === "network") refreshStatus();
+        return;
+      }
       if (kind === "unauthorized") {
         forgetAccessCode("通行碼不正確，請重新輸入。");
         if (action === "delete") showDeleteResult("通行碼不正確，刪除沒有執行。");
@@ -1100,6 +1139,7 @@
     });
 
     ensureSession();
+    updateDeleteHoursHint("");
     showScreen("loading");
     const firstCheck = refreshStatus();
     state.timers.poll = env.setInterval(refreshStatus, POLL_MS);

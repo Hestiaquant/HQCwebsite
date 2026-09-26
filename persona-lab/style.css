@@ -1,72 +1,50 @@
 /*
  * 展示頁樣式（showcase_frontend/style.css）
  *
- * 做什麼：對話頁與評估報告頁共用的樣式。自訂一套冷色系色票（青藍主色、灰藍底），字體只用裝置內建的系統字體，
- *   不載入任何外部字型或圖片；深色模式跟隨裝置設定。
+ * 做什麼：對話頁與評估報告頁共用的樣式。配色與字體沿用官網首頁（LEE 2026-09-26 裁示，設計書 ADR-0027）：
+ *   深色底 #121212 與 #1a1a1a、米白字 #EAE7E0（次要文字取 75% 透明度）、品牌金 #D4AF37 用在標題、邊框、按鈕與重點，
+ *   主要按鈕金底黑字，卡片細邊框用灰 #1f2937 或金色 50% 透明。官網只有深色版，本頁也只有深色一套，不跟隨裝置淺色設定。
+ *   字體寫 Lora、Noto Serif TC 開頭再接系統襯線字；內容安全政策只允許同站字型，本頁不載入任何外部字型或圖片，
+ *   訪客電腦有裝這兩套字就用，沒有就退回系統內建的襯線字。
  * 輸入：index.html 與 report.html 的類名；app.js 以 CSSOM 設定的長條圖位置與寬度。
  * 輸出：畫面樣式。
  * 失敗時：本檔載入失敗時頁面仍可用（純文字排版），hidden 屬性由瀏覽器預設樣式隱藏。
  */
 
-/* [前端] 色票與字體 */
+/* [前端] 色票與字體（官網配色；主要文字對背景的對比度都在 4.5 比 1 以上，金色小字在兩種底色上約 8 比 1） */
 :root {
-  --c-bg: #f1f4f7;
-  --c-surface: #ffffff;
-  --c-surface-alt: #f6f8fb;
-  --c-ink: #15202b;
-  --c-ink-soft: #4b5a6a;
-  --c-line: #d3dbe3;
-  --c-accent: #0b7285;
-  --c-accent-strong: #095c6b;
-  --c-accent-soft: #e2f2f5;
-  --c-on-accent: #ffffff;
-  --c-user: #e8eefc;
-  --c-user-line: #c5d3f5;
-  --c-warn: #8a5100;
-  --c-warn-soft: #fff3de;
-  --c-danger: #b3261e;
-  --c-danger-soft: #fdeceb;
-  --c-pos: #0b7285;
-  --c-neg: #c05621;
-  --c-hit: #6741d9;
-  --c-expr-smile: #2b8a3e;
-  --c-expr-stern: #b3261e;
-  --c-expr-ponder: #1c64b0;
-  --c-expr-surprise: #a85400;
-  --c-scrim: rgba(12, 22, 32, 0.55);
-  --c-shadow: rgba(12, 22, 32, 0.25);
-  --f-sans: system-ui, -apple-system, "Segoe UI", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+  color-scheme: dark;
+  --c-bg: #121212;
+  --c-surface: #1a1a1a;
+  --c-surface-alt: #222222;
+  --c-ink: #EAE7E0;
+  --c-ink-soft: rgba(234, 231, 224, 0.75);
+  --c-line: #1f2937;
+  --c-line-gold: rgba(212, 175, 55, 0.5);
+  --c-gold: #D4AF37;
+  --c-gold-bright: #E0BF52;
+  --c-accent: #D4AF37;
+  --c-accent-strong: #D4AF37;
+  --c-accent-soft: rgba(212, 175, 55, 0.14);
+  --c-focus: rgba(212, 175, 55, 0.45);
+  --c-on-accent: #121212;
+  --c-user: rgba(212, 175, 55, 0.1);
+  --c-user-line: rgba(212, 175, 55, 0.35);
+  --c-warn: #f0b35a;
+  --c-warn-soft: #2a2110;
+  --c-danger: #f28b82;
+  --c-danger-soft: #2e1614;
+  --c-pos: #D4AF37;
+  --c-neg: #c0714f;
+  --c-hit: #EAE7E0;
+  --c-expr-smile: #8fc79a;
+  --c-expr-stern: #f28b82;
+  --c-expr-ponder: #9dbbe3;
+  --c-expr-surprise: #f0b35a;
+  --c-scrim: rgba(0, 0, 0, 0.72);
+  --c-shadow: rgba(0, 0, 0, 0.55);
+  --f-serif: Lora, "Noto Serif TC", "Songti TC", "PMingLiU", "MingLiU", "Times New Roman", serif;
   --f-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --c-bg: #0e1620;
-    --c-surface: #152230;
-    --c-surface-alt: #1b2a3a;
-    --c-ink: #e6edf3;
-    --c-ink-soft: #a7b4c2;
-    --c-line: #2c3e50;
-    --c-accent: #2f9fb3;
-    --c-accent-strong: #6cc9d8;
-    --c-accent-soft: #123843;
-    --c-on-accent: #06151b;
-    --c-user: #1c2b4a;
-    --c-user-line: #2e4577;
-    --c-warn: #f0b35a;
-    --c-warn-soft: #3a2a10;
-    --c-danger: #f28b82;
-    --c-danger-soft: #3b1b1a;
-    --c-pos: #3bb3c6;
-    --c-neg: #f08c4a;
-    --c-hit: #a08cf2;
-    --c-expr-smile: #69c77f;
-    --c-expr-stern: #f28b82;
-    --c-expr-ponder: #7fb2f0;
-    --c-expr-surprise: #f0b35a;
-    --c-scrim: rgba(2, 8, 14, 0.7);
-    --c-shadow: rgba(0, 0, 0, 0.5);
-  }
 }
 
 /* [前端] 基礎 */
@@ -89,13 +67,13 @@ body {
   margin: 0;
   background: var(--c-bg);
   color: var(--c-ink);
-  font-family: var(--f-sans);
+  font-family: var(--f-serif);
   font-size: 16px;
   line-height: 1.65;
 }
 
 a {
-  color: var(--c-accent-strong);
+  color: var(--c-gold);
 }
 
 code,
@@ -136,7 +114,7 @@ pre {
 /* [前端] 頁首、頁面寬度、頁尾 */
 .site-head {
   background: var(--c-surface);
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line-gold);
 }
 
 .site-head-inner {
@@ -154,6 +132,7 @@ pre {
   margin: 0;
   font-weight: 700;
   letter-spacing: 0.02em;
+  color: var(--c-gold);
 }
 
 .site-nav {
@@ -169,9 +148,13 @@ pre {
   border-bottom: 2px solid transparent;
 }
 
+.site-nav a:hover {
+  color: var(--c-gold);
+}
+
 .site-nav a[aria-current="page"] {
-  color: var(--c-ink);
-  border-bottom-color: var(--c-accent);
+  color: var(--c-gold);
+  border-bottom-color: var(--c-gold);
 }
 
 .page {
@@ -181,7 +164,7 @@ pre {
 }
 
 .site-foot {
-  border-top: 1px solid var(--c-line);
+  border-top: 1px solid var(--c-line-gold);
   background: var(--c-surface);
   color: var(--c-ink-soft);
   font-size: 0.85rem;
@@ -209,6 +192,7 @@ pre {
 .offline-title {
   font-size: 1.5rem;
   margin: 0 0 12px;
+  color: var(--c-gold);
 }
 
 .offline-hours {
@@ -226,6 +210,7 @@ pre {
 .chat-intro h1 {
   font-size: 1.4rem;
   margin: 0 0 8px;
+  color: var(--c-gold);
 }
 
 .chat-intro p {
@@ -298,7 +283,7 @@ textarea {
 
 input:focus,
 textarea:focus {
-  outline: 3px solid var(--c-accent-soft);
+  outline: 3px solid var(--c-focus);
   outline-offset: 1px;
   border-color: var(--c-accent);
 }
@@ -311,15 +296,20 @@ textarea:disabled {
   font: inherit;
   min-height: 40px;
   padding: 8px 14px;
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--c-line-gold);
   border-radius: 8px;
   background: var(--c-surface);
   color: var(--c-ink);
   cursor: pointer;
 }
 
+.btn:hover:not(:disabled) {
+  border-color: var(--c-gold);
+  color: var(--c-gold);
+}
+
 .btn:focus-visible {
-  outline: 3px solid var(--c-accent-soft);
+  outline: 3px solid var(--c-focus);
   outline-offset: 1px;
   border-color: var(--c-accent);
 }
@@ -330,12 +320,20 @@ textarea:disabled {
 }
 
 .btn-primary {
-  background: var(--c-accent);
-  border-color: var(--c-accent);
+  background: var(--c-gold);
+  border-color: var(--c-gold);
+  color: var(--c-on-accent);
+  font-weight: 700;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--c-gold-bright);
+  border-color: var(--c-gold-bright);
   color: var(--c-on-accent);
 }
 
-.btn-danger {
+.btn-danger,
+.btn-danger:hover:not(:disabled) {
   border-color: var(--c-danger);
   color: var(--c-danger);
 }
@@ -410,6 +408,7 @@ textarea:disabled {
 
 .speaker {
   font-weight: 700;
+  color: var(--c-gold);
 }
 
 .expr {
@@ -597,6 +596,7 @@ dd.annot-wide {
 .notice {
   margin: 8px 0;
   padding: 8px 12px;
+  border: 1px solid var(--c-line-gold);
   border-radius: 8px;
   background: var(--c-accent-soft);
 }
@@ -611,7 +611,7 @@ dd.annot-wide {
   bottom: 8px;
   padding: 10px;
   background: var(--c-surface);
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--c-line-gold);
   border-radius: 12px;
   box-shadow: 0 4px 18px var(--c-shadow);
 }
@@ -704,6 +704,7 @@ dd.annot-wide {
   padding: 20px 22px;
   background: var(--c-surface);
   color: var(--c-ink);
+  border: 1px solid var(--c-line-gold);
   border-radius: 14px;
   box-shadow: 0 12px 40px var(--c-shadow);
 }
@@ -711,6 +712,7 @@ dd.annot-wide {
 .dialog h2 {
   margin: 0 0 10px;
   font-size: 1.2rem;
+  color: var(--c-gold);
 }
 
 .dialog p {
@@ -731,6 +733,7 @@ dd.annot-wide {
 .report-page > h1 {
   font-size: 1.6rem;
   margin: 0 0 8px;
+  color: var(--c-gold);
 }
 
 .lead,
@@ -758,6 +761,7 @@ dd.annot-wide {
 .report-pending h2 {
   font-size: 1rem;
   margin: 0 0 4px;
+  color: var(--c-gold);
 }
 
 .report-pending ul {
@@ -777,10 +781,12 @@ dd.annot-wide {
 .report h2 {
   font-size: 1.35rem;
   margin-top: 0;
+  color: var(--c-gold);
 }
 
 .report h3 {
   font-size: 1.15rem;
+  color: var(--c-gold);
 }
 
 .report h4,
@@ -815,6 +821,7 @@ dd.annot-wide {
 
 .report th {
   background: var(--c-surface-alt);
+  color: var(--c-gold);
 }
 
 .report .align-center {
@@ -849,7 +856,7 @@ dd.annot-wide {
 .report blockquote {
   margin: 12px 0;
   padding: 4px 12px;
-  border-left: 4px solid var(--c-accent);
+  border-left: 4px solid var(--c-gold);
   color: var(--c-ink-soft);
 }
 

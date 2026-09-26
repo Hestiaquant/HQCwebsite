@@ -26,6 +26,12 @@
       <div class="brand-title">街機決策對照展示台</div>
       <div class="brand-sub">貪吃蛇與俄羅斯方塊 · 決策在你的瀏覽器裡即時計算，不經後端，不是回放</div>
     </div>
+    <!-- [街機] 頁面切換：與對話頁、報告頁頁首同樣三個連結，訪客可回到其他頁 -->
+    <nav class="site-nav" aria-label="頁面">
+      <a href="../index.html">即時對話</a>
+      <a href="../report.html">評估報告</a>
+      <a href="index.html" aria-current="page">街機決策對照</a>
+    </nav>
     <div class="status-badge">
       <div class="dot"></div>
       <span>瀏覽器本機計算</span>
@@ -168,7 +174,7 @@
   <section class="about">
     <h2>關於這個展示</h2>
     <ul>
-      <li>兩個遊戲與所有決策都在你的瀏覽器裡計算，頁面不連任何後端，畫面也不是事先錄好的回放。</li>
+      <li>這兩個小遊戲的每一步，都由你瀏覽器裡的程式當場算出來，不連到開發者的電腦，也不是預錄的影片。</li>
       <li>規則專家基準線是手寫的評分規則。貪吃蛇看食物距離、可走空間與能否吃到；俄羅斯方塊窮舉所有落點，看消行數、空洞數、起伏度與落點深度。它不是訓練出來的模型。</li>
       <li>這兩套規則原本被標示成模型推論，並附上寫死的信心值常數；本頁如實改標為規則專家基準線，不顯示信心值。</li>
       <li>行為複製策略網路是用規則專家在固定種子上的對局紀錄（貪吃蛇 60 局、俄羅斯方塊 50 局）訓練的小型多層感知器：每個合法候選動作先算一列特徵（其中包含規則專家本身用到的量），網路替每個候選打一個分數，選分數最高者。以局為單位留出的驗證局上，它與規則專家選同一個動作的比例為貪吃蛇 100%（26222 步）、俄羅斯方塊 99.18%（7593 步）。</li>
@@ -182,10 +188,11 @@
     本頁為教育研究用途的技術展示，不構成任何投資建議。本頁程式碼與文字由 AI 協助生成。
   </footer>
 
-  <!-- [街機] 本機模組（依賴順序固定：亂數、引擎、對局統計、規則專家、行為複製特徵、權重、前向計算、頁面） -->
+  <!-- [街機] 本機模組（依賴順序固定：亂數、引擎、俄羅斯方塊落下動畫、對局統計、規則專家、行為複製特徵、權重、前向計算、頁面） -->
   <script src="engine/rng.js"></script>
   <script src="engine/snake.js"></script>
   <script src="engine/tetris.js"></script>
+  <script src="engine/tetris_anim.js"></script>
   <script src="engine/match.js"></script>
   <script src="policies/rule_snake.js"></script>
   <script src="policies/rule_tetris.js"></script>

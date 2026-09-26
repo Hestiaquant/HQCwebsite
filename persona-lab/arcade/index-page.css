@@ -1,19 +1,27 @@
 /* 建置時由 arcade/index.html 的 style 區塊抽出成外部檔，內容未改 */
-    /* [街機] 色彩與字型（沿用原版配色；字型只用系統內建，不載入外部字型） */
+    /* [街機] 色彩與字型（改用官網配色，LEE 2026-09-26 裁示，設計書 ADR-0027：深色底 #121212 與 #1a1a1a、
+       米白字 #EAE7E0、品牌金 #D4AF37、細邊框灰 #1f2937 或金色 50% 透明；字型寫 Lora、Noto Serif TC 開頭再接系統襯線字，
+       內容安全政策只允許同站字型，不載入外部字型，訪客電腦沒裝時退回系統襯線字） */
     :root {
-      --bg-main: #0a0c13;
-      --bg-panel: #111420;
-      --bg-card: #181d2d;
-      --border-gold: #c5a059;
-      --border-dim: #2f364a;
-      --gold-light: #f5d77f;
-      --accent-green: #2ec4b6;
-      --accent-flame: #ff6a00;
-      --accent-danger: #e63946;
-      --accent-cyan: #00f0ff;
-      --text-main: #f5f5f7;
-      --text-muted: #8b92a5;
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", monospace, sans-serif;
+      color-scheme: dark;
+      --bg-main: #121212;
+      --bg-panel: #1a1a1a;
+      --bg-card: #222222;
+      --bg-inset: #121212;
+      --border-gold: #D4AF37;
+      --border-gold-soft: rgba(212, 175, 55, 0.5);
+      --border-dim: #1f2937;
+      --gold-light: #D4AF37;
+      --gold-bright: #E0BF52;
+      --accent-green: #8fc79a;
+      --accent-flame: #f0b35a;
+      --accent-danger: #f28b82;
+      --accent-cyan: #D4AF37;
+      --text-main: #EAE7E0;
+      --text-muted: rgba(234, 231, 224, 0.75);
+      --text-body: rgba(234, 231, 224, 0.85);
+      --on-gold: #121212;
+      --font-family: Lora, "Noto Serif TC", "Songti TC", "PMingLiU", "MingLiU", "Times New Roman", serif;
     }
 
     * {
@@ -23,8 +31,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 20%, #171b29 0%, var(--bg-main) 75%);
-      background-color: var(--bg-main);
+      background: var(--bg-main);
       color: var(--text-main);
       font-family: var(--font-family);
       min-height: 100vh;
@@ -46,8 +53,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 14px 22px;
-      background: rgba(17, 20, 32, 0.85);
-      border: 1px solid var(--border-dim);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-gold-soft);
       border-radius: 12px;
       margin-bottom: 16px;
       box-shadow: 0 4px 25px rgba(0,0,0,0.5);
@@ -71,6 +78,35 @@
       color: var(--text-muted);
     }
 
+    /* [街機] 頁面切換列：與主頁 .site-nav 相同結構，配色改用本頁變數；目前頁以金色底線標示 */
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 18px;
+      font-size: 0.85rem;
+    }
+
+    .site-nav a {
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 4px 2px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .site-nav a:hover {
+      color: var(--text-main);
+    }
+
+    .site-nav a:focus-visible {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 2px;
+    }
+
+    .site-nav a[aria-current="page"] {
+      color: var(--gold-light);
+      border-bottom-color: var(--border-gold);
+    }
+
     /* [街機] 狀態標籤：固定顯示在瀏覽器本機計算，沒有連線狀態 */
     .status-badge {
       display: flex;
@@ -80,9 +116,9 @@
       border-radius: 20px;
       font-size: 0.78rem;
       font-weight: 600;
-      background: rgba(46, 196, 182, 0.15);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold-soft);
+      color: var(--gold-light);
     }
 
     .dot {
@@ -121,10 +157,10 @@
     }
 
     .tab-btn.active {
-      background: linear-gradient(135deg, #232a3e 0%, #151a28 100%);
+      background: var(--bg-card);
       border-color: var(--border-gold);
       color: var(--gold-light);
-      box-shadow: 0 4px 15px rgba(197, 160, 89, 0.2);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15);
     }
 
     /* [街機] 策略與種子列 */
@@ -146,7 +182,7 @@
 
     .policy-bar select,
     .policy-bar input {
-      background: #08090e;
+      background: var(--bg-inset);
       border: 1px solid var(--border-dim);
       border-radius: 6px;
       padding: 6px 10px;
@@ -176,7 +212,7 @@
       flex: 1;
       min-width: 0;
       background: var(--bg-panel);
-      border: 1px solid var(--border-dim);
+      border: 1px solid var(--border-gold-soft);
       border-radius: 14px;
       padding: 16px;
       display: flex;
@@ -196,7 +232,7 @@
       width: 380px;
       flex-shrink: 0;
       background: var(--bg-panel);
-      border: 1px solid var(--border-dim);
+      border: 1px solid var(--border-gold-soft);
       border-radius: 14px;
       padding: 16px;
       display: flex;
@@ -209,7 +245,7 @@
     .canvas-wrapper {
       position: relative;
       max-width: 100%;
-      background: #050608;
+      background: var(--bg-main);
       border: 2px solid var(--border-dim);
       border-radius: 10px;
       box-shadow: inset 0 0 25px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,0.5);
@@ -233,8 +269,8 @@
     }
 
     .btn-action {
-      background: #1f2537;
-      border: 1px solid var(--border-dim);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-gold-soft);
       color: var(--text-main);
       padding: 9px 18px;
       border-radius: 8px;
@@ -246,7 +282,7 @@
     }
 
     .btn-action:hover {
-      background: #2b334c;
+      background: var(--bg-card);
       border-color: var(--gold-light);
       color: var(--gold-light);
     }
@@ -257,18 +293,21 @@
     }
 
     .btn-action.primary {
-      background: linear-gradient(135deg, #c5a059 0%, #947133 100%);
+      background: var(--gold-light);
       border-color: var(--gold-light);
-      color: #0b0d14;
+      color: var(--on-gold);
     }
 
     .btn-action.primary:hover {
-      box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+      background: var(--gold-bright);
+      border-color: var(--gold-bright);
+      color: var(--on-gold);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
     }
 
     .speed-btn-group {
       display: flex;
-      background: #0d0f17;
+      background: var(--bg-inset);
       border: 1px solid var(--border-dim);
       border-radius: 8px;
       padding: 2px;
@@ -290,7 +329,7 @@
 
     .btn-speed.active {
       background: var(--border-gold);
-      color: #0b0d14;
+      color: var(--on-gold);
     }
 
     /* [街機] 遙測面板 */
@@ -364,13 +403,13 @@
     }
 
     .log-terminal {
-      background: #06070a;
+      background: var(--bg-inset);
       border: 1px solid var(--border-dim);
       border-radius: 8px;
       padding: 10px;
       font-family: monospace;
       font-size: 0.72rem;
-      color: #9299aa;
+      color: var(--text-muted);
       height: 140px;
       overflow-y: auto;
       display: flex;
@@ -430,11 +469,11 @@
       margin-top: 16px;
       padding: 16px 20px;
       background: var(--bg-panel);
-      border: 1px solid var(--border-dim);
+      border: 1px solid var(--border-gold-soft);
       border-radius: 12px;
       font-size: 0.8rem;
       line-height: 1.7;
-      color: #ccd2e3;
+      color: var(--text-body);
     }
 
     .about h2 {
@@ -460,5 +499,10 @@
       .stage-container { flex-direction: column; }
       .telemetry-panel { width: 100%; }
       .tab-btn { font-size: 0.85rem; padding: 10px 8px; }
+    }
+
+    /* [街機] 手機寬度：頁面切換列獨佔一行，不和標題擠在同一列 */
+    @media (max-width: 600px) {
+      .site-nav { flex-basis: 100%; }
     }
   
