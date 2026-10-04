@@ -219,7 +219,7 @@ pre {
   color: var(--c-ink-soft);
 }
 
-/* 回覆等待時間與日期問題的說明（2026-10-03 依本機實測改寫；原為 LEE 2026-09-27 裁示的第一句要等模型載入說明） */
+/* 回覆等待時間與日期問題的說明（2026-10-04 起是兩行短句，完整說明在報告頁的已知限制一節；2026-10-03 依本機實測改寫；原為 LEE 2026-09-27 裁示的第一句要等模型載入說明） */
 .chat-intro .first-reply-note {
   padding: 6px 10px;
   background: var(--c-surface-alt);
@@ -526,16 +526,8 @@ textarea:disabled {
   border-radius: 10px;
 }
 
-.annot-sec + .annot-sec,
-.annot-more .annot-sec {
-  margin-top: 10px;
-}
-
-.annot-more {
-  margin-top: 10px;
-}
-
-/* 面板在回覆下方佔滿寬度：其餘區塊依高度流進多欄（每欄至少 300px），手機自動變一欄，避免面板拉得太長 */
+/* 整個面板預設收合（LEE 2026-10-04 裁示，設計書 ADR-0054）：六個區塊都在 details 裡，收合時只露出摘要列。
+   展開後區塊依高度流進多欄（每欄至少 300px），手機自動變一欄，避免面板拉得太長 */
 .annot-body {
   columns: 3 300px;
   column-gap: 20px;
@@ -547,14 +539,28 @@ textarea:disabled {
   margin: 0 0 12px;
 }
 
-.annot > .annot-sec .annot-grid {
-  max-width: 640px;
-}
-
 .annot-summary {
   cursor: pointer;
   color: var(--c-ink-soft);
   font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+/* 輸入框黏在視窗底部（高約 180px），面板收合後摘要列正好落在它後面。新的一則捲入畫面，或摘要列取得鍵盤焦點時，
+   下方多留 200px，摘要列才不會被輸入框蓋住（實測見設計書 ADR-0054） */
+.turn,
+.annot-summary {
+  scroll-margin-bottom: 200px;
+}
+
+.annot-summary:hover,
+.annot-more[open] > .annot-summary {
+  color: var(--c-ink);
+}
+
+.annot-summary:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
 }
 
 .annot-title {
@@ -836,7 +842,7 @@ dd.annot-wide {
   padding-left: 1.3em;
 }
 
-/* 危機偵測修補說明與兩次保留組閱讀提示（2026-10-03 退路 B 例外上線，report.html 範本內固定文字） */
+/* 危機偵測修補說明、已知限制（2026-10-04 加入）與兩次保留組閱讀提示（2026-10-03 退路 B 例外上線，report.html 範本內固定文字） */
 .report-disclosure {
   margin: 16px 0;
   padding: 12px 16px;
@@ -851,6 +857,13 @@ dd.annot-wide {
   font-size: 1.05rem;
   margin: 0 0 6px;
   color: var(--c-gold);
+}
+
+/* 已知限制一節的小標（2026-10-04）：比節標題小一級，不沿用瀏覽器預設的 h3 大小（預設會比上面的 h2 還大） */
+.report-disclosure h3 {
+  font-size: 0.95rem;
+  margin: 10px 0 4px;
+  color: var(--c-ink);
 }
 
 .report-disclosure p,

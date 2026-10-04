@@ -7,8 +7,10 @@
  *      按先不開始只關掉告知、輸入框維持鎖住，刪除我的對話仍可使用。
  *   3. 通行碼由訪客輸入，只存 sessionStorage（分頁關閉即消失），不存 localStorage。
  *   4. 工作階段編號用 crypto.randomUUID 產生，存 localStorage 的 hestia_session_id。
- *   5. 送出回合後，在每則回覆旁畫出標註面板：內在狀態名稱、PAD 三軸、表情四態、意圖與各類機率、need_rag、
+ *   5. 送出回合後，在每則回覆下方畫出標註面板：內在狀態名稱、PAD 三軸、表情四態、意圖與各類機率、need_rag、
  *      情緒強度、合規攔截與理由、記憶引用與寫入、檢索段落編號與章名、各階段延遲。
+ *      整個面板預設收合，只露出一列摘要（表情、內在狀態、意圖、合規、記憶引用筆數、引用段落數、總延遲），
+ *      點摘要列或用鍵盤展開才看得到六個區塊（LEE 2026-10-04 裁示，設計書 ADR-0054）；回覆標頭的表情標籤照常顯示。
  *      後端回應有 emotion.detail（情緒 v2 細節欄，後端設定 emotion_detail_output 開啟時才有，設計書 ADR-0040）時，
  *      回覆標頭多細分表情與內在狀態兩個標籤（顏色依色調），情緒區塊多細分表情、內在狀態（心情）、心情三軸、事件評價、
  *      表情守門五列；沒有細節欄時畫面與加入前相同。理解層建議表情可能是 14 種細分表情之一，顯示其中文名。
@@ -353,6 +355,7 @@
    * 輸入：POST 200 的回應本體（spec/05 1.2）；欄位可缺漏。
    * 輸出：{ reply, head: { expressionCode, expressionText, blocked, turnText, contractNote },
    *   summary, sections: [{ key, title, rows }] }。row 為 { label, text } 或 { label, bars } 或 { label, list }。
+   *   summary 是面板收合時唯一看得到的一列文字，依序為表情、內在狀態、意圖、合規、記憶引用筆數、引用段落數、總延遲。
    * 失敗時：不拋例外；缺漏欄位顯示無資料，未知代碼原樣顯示。
    */
   function annotationModel(resp) {
@@ -498,9 +501,17 @@
 
     const version = str(r.contract_version);
     const major = version.split(".")[0];
+    // [前端] 摘要列（LEE 2026-10-04 裁示，設計書 ADR-0054）：整個標註面板預設收合，不展開時只看得到這一列，
+    //   所以開頭先寫表情與內在狀態的名稱。有情緒 v2 細節欄時用細分表情與 25 種內在狀態的名稱（回應的 4 態表情與
+    //   state_code 是相容投影），沒有時用 4 態表情與舊狀態名稱；合規欄位缺漏時寫無資料，不寫成放行。
+    const summaryExpr =
+      (detail.face && (detail.face.name || detail.face.code)) || (exprCode ? EXPRESSIONS[exprCode] : str(e.expression)) || NO_DATA;
+    const summaryState = (detail.mood && (detail.mood.name || detail.mood.code)) || stateName || NO_DATA;
     const summary = [
+      "表情 " + summaryExpr,
+      "內在狀態 " + summaryState,
       "意圖 " + intentName,
-      blocked ? "合規攔截" : "合規放行",
+      c.blocked === undefined ? "合規 " + NO_DATA : blocked ? "合規攔截" : "合規放行",
       "記憶引用 " + used.length + " 筆",
       "引用段落 " + cites.length + " 段",
       "總延遲 " + fmtMs(lat.total)
@@ -1043,7 +1054,12 @@
       return box;
     }
 
-    /** 畫一則回覆與下方的標註面板（其餘區塊包在 annot-body，寬螢幕排成多欄）。輸入：TurnResponse。輸出：article 元素。 */
+    /**
+     * 畫一則回覆與下方的標註面板。輸入：TurnResponse。輸出：article 元素。
+     * 標註面板的六個區塊（情緒與表情在內）都包在同一個 details 裡，預設收合，只露出摘要列
+     * （LEE 2026-10-04 裁示，設計書 ADR-0054）；展開後區塊在 annot-body 內，寬螢幕排成多欄。
+     * 回覆標頭的表情、細分表情、內在狀態與合規攔截標籤不在面板內，收合時照常顯示。
+     */
     function renderReply(data) {
       const model = annotationModel(data);
       const art = h("article", "turn turn-reply" + (model.head.blocked ? " is-blocked" : ""));
@@ -1063,12 +1079,12 @@
 
       const aside = h("aside", "annot");
       aside.setAttribute("aria-label", "本則回覆的標註");
-      aside.appendChild(renderSection(model.sections[0]));
+      // [前端] 用原生 details 與 summary：不設 open 就是收合；摘要列可用 Tab 聚焦、Enter 或空白鍵開合，
+      //   展開與收合狀態由瀏覽器告知輔助技術，所以不另外加 aria-expanded、tabindex 或開合用的事件處理
       const more = h("details", "annot-more");
-      more.open = true;
       more.appendChild(h("summary", "annot-summary", model.summary));
       const body = h("div", "annot-body");
-      model.sections.slice(1).forEach(function (sec) {
+      model.sections.forEach(function (sec) {
         body.appendChild(renderSection(sec));
       });
       more.appendChild(body);
