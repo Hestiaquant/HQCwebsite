@@ -9,9 +9,12 @@
  *   4. 工作階段編號用 crypto.randomUUID 產生，存 localStorage 的 hestia_session_id。
  *   5. 送出回合後，在每則回覆旁畫出標註面板：內在狀態名稱、PAD 三軸、表情四態、意圖與各類機率、need_rag、
  *      情緒強度、合規攔截與理由、記憶引用與寫入、檢索段落編號與章名、各階段延遲。
+ *      後端回應有 emotion.detail（情緒 v2 細節欄，後端設定 emotion_detail_output 開啟時才有，設計書 ADR-0040）時，
+ *      回覆標頭多細分表情與內在狀態兩個標籤（顏色依色調），情緒區塊多細分表情、內在狀態（心情）、心情三軸、事件評價、
+ *      表情守門五列；沒有細節欄時畫面與加入前相同。理解層建議表情可能是 14 種細分表情之一，顯示其中文名。
  *   6. 刪除我的對話：DELETE 後顯示筆數，清掉兩個 localStorage 鍵並重新產生工作階段編號。
  *      刪除按鈕在對話畫面與時段外畫面都顯示；沒有通行碼時在刪除區塊內輸入。閘道本身不限時段（契約 1.3），
- *      但每天 22:05 排程寫入總開關並關閉通道後刪除送不到閘道，所以按鈕下方提示刪除對話請在開放時段內操作
+ *      但每天 23:35 排程寫入總開關並關閉通道後刪除送不到閘道，所以按鈕下方提示刪除對話請在開放時段內操作
  *      （時段取建置時代入的公布時段），時段外刪除失敗時也顯示同一句說明（LEE 2026-09-26 裁示只改文字，待辦 T70）。
  * 輸入：瀏覽器的 document、儲存區與 config.js 的 HESTIA_SHOWCASE_CONFIG；後端呼叫一律經 api.js。
  * 輸出：畫面更新；本檔不發任何網路請求。
@@ -48,6 +51,50 @@
   // [前端] 顯示用名稱表（內容對照 spec/05 第四、五章與 spec/labels/labels_v1.json）
   const STATE_NAMES = { calm: "平靜", warm: "溫暖", stern: "嚴肅", worried: "擔憂", elated: "振奮" };
   const EXPRESSIONS = { SMILE: "微笑", STERN: "認真", PONDER: "思索", SURPRISE: "驚訝" };
+  // [前端] 情緒 v2 細分表情 14 種、內在狀態 25 種、事件評價 10 種與強度三級（2026-09-27，設計書 ADR-0040；
+  //   名稱對照 src/hestia_demo/emotion_expression/model.py 的 FACE_NAMES、MOOD_STATE_NAMES、APPRAISAL_NAMES、LEVEL_NAMES，
+  //   測試比對）。後端回應有 emotion.detail 時才用到，沒有時標註面板與加入前相同。
+  //   色調 tone：smile 微笑類、ponder 思索類、surprise 驚訝類、stern 嚴肅類、concern 關切類、neutral 平靜。
+  const FACES = {
+    NEUTRAL: ["平靜", "neutral"],
+    SMILE_SOFT: ["淺笑", "smile"],
+    SMILE: ["微笑", "smile"],
+    SMILE_BRIGHT: ["開懷", "smile"],
+    PONDER: ["思索", "ponder"],
+    FOCUS: ["專注", "ponder"],
+    CURIOUS: ["好奇", "surprise"],
+    SURPRISE: ["驚訝", "surprise"],
+    STERN_SOFT: ["認真", "stern"],
+    STERN: ["嚴肅", "stern"],
+    CONCERN: ["關切", "concern"],
+    COMFORT: ["心疼", "concern"],
+    WORRY: ["擔憂", "concern"],
+    APOLOGY: ["歉意", "concern"]
+  };
+  // [前端] 內在狀態的分區：[輕、中、強的名稱, 色調]；neutral 為平靜
+  const MOOD_ZONES = {
+    exuberant: [["專注投入", "投入", "振奮"], "warm"],
+    relaxed: [["平和", "從容", "篤定"], "warm"],
+    dependent: [["期待", "欣喜", "感動"], "warm"],
+    docile: [["放鬆", "柔和", "柔和"], "warm"],
+    hostile: [["認真", "嚴正", "嚴正"], "stern"],
+    disdainful: [["審慎", "冷靜", "冷靜"], "stern"],
+    anxious: [["不安", "憂慮", "焦急"], "concern"],
+    bored: [["惋惜", "低落", "沉痛"], "concern"]
+  };
+  const LEVELS = { mild: ["輕", 0], moderate: ["中", 1], strong: ["強", 2] };
+  const APPRAISALS = {
+    worry_for: "擔憂",
+    firm: "堅定",
+    apologetic: "歉意",
+    concern: "關切",
+    surprise: "訝異",
+    puzzled: "困惑",
+    pleased: "欣慰",
+    welcome: "歡迎",
+    interest: "專注",
+    none: "無"
+  };
   const INTENT_CLASSES = [
     { key: "greeting_smalltalk", name: "問候與社交應對" },
     { key: "concept_question", name: "課程觀念提問" },
@@ -201,8 +248,8 @@
 
   /**
    * 公布時段的顯示文字。
-   * 輸入：config 或後端給的原字串，例如 07:00-22:00。
-   * 輸出：HH:MM-HH:MM 格式時轉成 每天 07:00 到 22:00（台灣時間）；空字串時為 尚未公布；其他原樣顯示。
+   * 輸入：config 或後端給的原字串，例如 06:00-23:30。
+   * 輸出：HH:MM-HH:MM 格式時轉成 每天 06:00 到 23:30（台灣時間）；空字串時為 尚未公布；其他原樣顯示。
    */
   function fmtHours(text) {
     const s = str(text).trim();
@@ -214,8 +261,8 @@
 
   /**
    * 刪除區塊的開放時段提示（LEE 2026-09-26 裁示：時段外通道關閉，刪除請在開放時段內操作）。
-   * 輸入：config 或後端給的公布時段原字串，例如 07:00-22:00。
-   * 輸出：HH:MM-HH:MM 格式時為 刪除對話請在開放時段（每天 07:00 到 22:00）內操作。；
+   * 輸入：config 或後端給的公布時段原字串，例如 06:00-23:30。
+   * 輸出：HH:MM-HH:MM 格式時為 刪除對話請在開放時段（每天 06:00 到 23:30）內操作。；
    *   空字串時省略括號內的時段；其他格式把原字串放進括號。
    */
   function fmtDeleteHoursHint(text) {
@@ -231,6 +278,74 @@
     if (v === true) return yes || "是";
     if (v === false) return no || "否";
     return NO_DATA;
+  }
+
+  /**
+   * 細分表情的顯示資料（情緒 v2）。輸入：代碼。輸出：{ code, name, tone, text }；未知代碼 tone 為 none、名稱空白、原樣顯示代碼。
+   */
+  function faceInfo(code) {
+    const c = str(code);
+    const hit = Object.prototype.hasOwnProperty.call(FACES, c) ? FACES[c] : null;
+    return { code: c, name: hit ? hit[0] : "", tone: hit ? hit[1] : "none", text: hit ? c + " " + hit[0] : c || NO_DATA };
+  }
+
+  /**
+   * 內在狀態（心情，25 種）的顯示資料。輸入：代碼（例如 relaxed_moderate、neutral）、後端給的名稱（選用）。
+   * 輸出：{ code, name, level, tone, text }；neutral 為平靜；未知代碼原樣顯示、tone 為 none。
+   */
+  function moodInfo(code, fallbackName) {
+    const c = str(code);
+    if (c === "neutral") return { code: c, name: "平靜", level: "", tone: "neutral", text: "平靜（neutral）" };
+    const cut = c.lastIndexOf("_");
+    const zone = cut > 0 ? c.slice(0, cut) : "";
+    const level = cut > 0 ? c.slice(cut + 1) : "";
+    const z = Object.prototype.hasOwnProperty.call(MOOD_ZONES, zone) ? MOOD_ZONES[zone] : null;
+    const lv = Object.prototype.hasOwnProperty.call(LEVELS, level) ? LEVELS[level] : null;
+    if (!z || !lv) {
+      const name = str(fallbackName);
+      return { code: c, name: name, level: "", tone: "none", text: name ? name + "（" + c + "）" : c || NO_DATA };
+    }
+    const name = z[0][lv[1]];
+    return { code: c, name: name, level: lv[0], tone: z[1], text: name + "（" + zone + "，" + lv[0] + "）" };
+  }
+
+  /**
+   * 情緒 v2 細節欄的標註列（後端設定 emotion_detail_output 開啟時回應才有 emotion.detail）。
+   * 輸入：emotion.detail（物件或缺漏）。輸出：{ rows, face, mood }；沒有細節時 rows 為空陣列、face 與 mood 為 null。
+   * 失敗時：不拋例外；缺漏欄位顯示無資料。
+   */
+  function detailModel(detail) {
+    if (!detail || typeof detail !== "object" || Array.isArray(detail)) return { rows: [], face: null, mood: null };
+    const face = faceInfo(detail.face);
+    const mood = moodInfo(detail.mood_state, detail.mood_state_name);
+    const mpad = obj(detail.mood);
+    const appr = str(detail.appraisal);
+    const level = Object.prototype.hasOwnProperty.call(LEVELS, detail.level) ? LEVELS[detail.level][0] : "";
+    const apprName = APPRAISALS[appr] || str(detail.appraisal_name) || appr || NO_DATA;
+    const iota = num(detail.intensity);
+    const guards = Array.isArray(detail.guard) ? detail.guard.map(str).filter(Boolean) : [];
+    const rows = [
+      { label: "細分表情", text: face.text },
+      { label: "內在狀態（心情）", text: mood.text },
+      {
+        label: "心情三軸",
+        bars: [
+          ["愉悅 P", mpad.pleasure],
+          ["喚起 A", mpad.arousal],
+          ["支配 D", mpad.dominance]
+        ].map(function (p) {
+          const v = num(p[1]);
+          return { name: p[0], value: v === null ? 0 : Math.max(-1, Math.min(1, v)), min: -1, max: 1, text: fmtSigned(v, 2), highlight: false };
+        })
+      },
+      {
+        label: "事件評價",
+        text: apprName + (appr && APPRAISALS[appr] ? "（" + appr + "）" : "") + (level ? " · " + level : "") +
+          (iota !== null && appr !== "none" ? " · 強度 " + iota.toFixed(2) : "")
+      },
+      { label: "表情守門", text: guards.length ? "改寫 " + guards.join("、") : "未改寫" }
+    ];
+    return { rows: rows, face: face, mood: mood };
   }
 
   /**
@@ -256,6 +371,9 @@
     const exprCode = Object.prototype.hasOwnProperty.call(EXPRESSIONS, e.expression) ? e.expression : "";
     const exprText = exprCode ? exprCode + " " + EXPRESSIONS[exprCode] : str(e.expression) || NO_DATA;
     const sugg = str(e.llm_suggested_expression);
+    // 理解層建議表情：2026-09-27 起可能是 14 種細分表情之一（PROMPT_VERSION v5），名稱先查細分表，再查舊四態
+    const suggName = Object.prototype.hasOwnProperty.call(FACES, sugg) ? FACES[sugg][0] : EXPRESSIONS[sugg] || "";
+    const detail = detailModel(e.detail);
     const emotionRows = [
       { label: "內在狀態", text: stateName ? stateName + (stateCode ? "（" + stateCode + "）" : "") : NO_DATA },
       {
@@ -272,9 +390,9 @@
       { label: "表情", text: exprText },
       {
         label: "理解層建議表情",
-        text: (sugg ? sugg + (EXPRESSIONS[sugg] ? " " + EXPRESSIONS[sugg] : "") : "無") + "（只記錄，不參與決定）"
+        text: (sugg ? sugg + (suggName ? " " + suggName : "") : "無") + "（只記錄，不參與決定）"
       }
-    ];
+    ].concat(detail.rows);
 
     // [前端] 直覺層意圖
     const choice = Number.isInteger(it.choice) ? it.choice : null;
@@ -393,6 +511,11 @@
       head: {
         expressionCode: exprCode,
         expressionText: exprText,
+        faceCode: detail.face ? detail.face.code : "",
+        faceText: detail.face ? detail.face.text : "",
+        faceTone: detail.face ? detail.face.tone : "",
+        moodText: detail.mood ? detail.mood.name || detail.mood.text : "",
+        moodTone: detail.mood ? detail.mood.tone : "",
         blocked: blocked,
         turnText: Number.isInteger(r.turn_index) ? "第 " + r.turn_index + " 回合" : "",
         contractNote: version && major !== SUPPORTED_CONTRACT_MAJOR ? "回應契約版本 " + version + "，部分欄位可能無法顯示" : ""
@@ -427,6 +550,11 @@
     fmtMs: fmtMs,
     fmtHours: fmtHours,
     fmtDeleteHoursHint: fmtDeleteHoursHint,
+    FACES: FACES,
+    MOOD_ZONES: MOOD_ZONES,
+    APPRAISALS: APPRAISALS,
+    faceInfo: faceInfo,
+    moodInfo: moodInfo,
     annotationModel: annotationModel
   };
 
@@ -915,7 +1043,7 @@
       return box;
     }
 
-    /** 畫一則回覆與旁邊的標註面板。輸入：TurnResponse。輸出：article 元素。 */
+    /** 畫一則回覆與下方的標註面板（其餘區塊包在 annot-body，寬螢幕排成多欄）。輸入：TurnResponse。輸出：article 元素。 */
     function renderReply(data) {
       const model = annotationModel(data);
       const art = h("article", "turn turn-reply" + (model.head.blocked ? " is-blocked" : ""));
@@ -923,6 +1051,9 @@
       const head = h("div", "reply-head");
       head.appendChild(h("span", "speaker", "赫斯提亞"));
       head.appendChild(h("span", "expr expr-" + (model.head.expressionCode || "none"), model.head.expressionText));
+      // 情緒 v2 細節欄（有 emotion.detail 時）：細分表情與內在狀態各一個標籤，顏色依色調
+      if (model.head.faceCode) head.appendChild(h("span", "face face-" + (model.head.faceTone || "none"), model.head.faceText));
+      if (model.head.moodText) head.appendChild(h("span", "mood mood-" + (model.head.moodTone || "none"), model.head.moodText));
       if (model.head.blocked) head.appendChild(h("span", "tag tag-blocked", "合規攔截"));
       if (model.head.turnText) head.appendChild(h("span", "turn-no", model.head.turnText));
       main.appendChild(head);
@@ -936,9 +1067,11 @@
       const more = h("details", "annot-more");
       more.open = true;
       more.appendChild(h("summary", "annot-summary", model.summary));
+      const body = h("div", "annot-body");
       model.sections.slice(1).forEach(function (sec) {
-        more.appendChild(renderSection(sec));
+        body.appendChild(renderSection(sec));
       });
+      more.appendChild(body);
       aside.appendChild(more);
       art.appendChild(aside);
       return art;
@@ -999,7 +1132,7 @@
     /** 依 api.js 的 kind 分流顯示（契約第七章）。輸入：失敗結果、動作（send 或 delete）。輸出：無。 */
     function handleFailure(res, action) {
       const kind = res.kind;
-      // 時段外畫面的刪除失敗（通行碼錯誤與請求過多除外）：22:05 後通道已關，改顯示開放時段說明
+      // 時段外畫面的刪除失敗（通行碼錯誤與請求過多除外）：23:35 後通道已關，改顯示開放時段說明
       const offlineDelete = action === "delete" && state.screen === "offline";
       if (offlineDelete && kind !== "unauthorized" && kind !== "wait") {
         showDeleteResult("刪除沒有執行。" + el.deleteHoursHint.textContent);

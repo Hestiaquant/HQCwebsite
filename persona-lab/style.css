@@ -41,6 +41,7 @@
   --c-expr-stern: #f28b82;
   --c-expr-ponder: #9dbbe3;
   --c-expr-surprise: #f0b35a;
+  --c-expr-concern: #c3a6e6;
   --c-scrim: rgba(0, 0, 0, 0.72);
   --c-shadow: rgba(0, 0, 0, 0.55);
   --f-serif: Lora, "Noto Serif TC", "Songti TC", "PMingLiU", "MingLiU", "Times New Roman", serif;
@@ -218,6 +219,14 @@ pre {
   color: var(--c-ink-soft);
 }
 
+/* 回覆等待時間與日期問題的說明（2026-10-03 依本機實測改寫；原為 LEE 2026-09-27 裁示的第一句要等模型載入說明） */
+.chat-intro .first-reply-note {
+  padding: 6px 10px;
+  background: var(--c-surface-alt);
+  border-left: 3px solid var(--c-line-gold);
+  border-radius: 4px;
+}
+
 .session-line code {
   background: var(--c-surface-alt);
   border: 1px solid var(--c-line);
@@ -378,6 +387,7 @@ textarea:disabled {
   margin: 0;
 }
 
+/* 標註面板一律在回覆下方（LEE 2026-09-27 裁示，原本寬螢幕放右側 360px 欄） */
 .turn-reply {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -386,12 +396,6 @@ textarea:disabled {
   background: var(--c-surface);
   border: 1px solid var(--c-line);
   border-radius: 14px;
-}
-
-@media (min-width: 900px) {
-  .turn-reply {
-    grid-template-columns: minmax(0, 1fr) 360px;
-  }
 }
 
 .turn-reply.is-blocked {
@@ -439,6 +443,53 @@ textarea:disabled {
   color: var(--c-ink-soft);
 }
 
+/* [前端] 情緒 v2 細分表情與內在狀態標籤（後端回應有 emotion.detail 時才出現，設計書 ADR-0040）：
+   細分表情依色調沿用四態的顏色，關切類（關切、心疼、擔憂、歉意）另用淡紫；內在狀態用虛線框，正愉悅分區為金色。 */
+.face,
+.mood {
+  font-size: 0.8rem;
+  padding: 0 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.mood {
+  border-style: dashed;
+}
+
+.face-smile {
+  color: var(--c-expr-smile);
+}
+
+.face-ponder {
+  color: var(--c-expr-ponder);
+}
+
+.face-surprise {
+  color: var(--c-expr-surprise);
+}
+
+.face-stern,
+.mood-stern {
+  color: var(--c-expr-stern);
+}
+
+.face-concern,
+.mood-concern {
+  color: var(--c-expr-concern);
+}
+
+.mood-warm {
+  color: var(--c-gold);
+}
+
+.face-neutral,
+.face-none,
+.mood-neutral,
+.mood-none {
+  color: var(--c-ink-soft);
+}
+
 .tag-blocked {
   font-size: 0.8rem;
   padding: 0 8px;
@@ -482,6 +533,22 @@ textarea:disabled {
 
 .annot-more {
   margin-top: 10px;
+}
+
+/* 面板在回覆下方佔滿寬度：其餘區塊依高度流進多欄（每欄至少 300px），手機自動變一欄，避免面板拉得太長 */
+.annot-body {
+  columns: 3 300px;
+  column-gap: 20px;
+  margin-top: 10px;
+}
+
+.annot-body .annot-sec {
+  break-inside: avoid;
+  margin: 0 0 12px;
+}
+
+.annot > .annot-sec .annot-grid {
+  max-width: 640px;
 }
 
 .annot-summary {
@@ -766,6 +833,41 @@ dd.annot-wide {
 
 .report-pending ul {
   margin: 0;
+  padding-left: 1.3em;
+}
+
+/* 危機偵測修補說明與兩次保留組閱讀提示（2026-10-03 退路 B 例外上線，report.html 範本內固定文字） */
+.report-disclosure {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-left: 3px solid var(--c-line-gold);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.report-disclosure h2 {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  color: var(--c-gold);
+}
+
+.report-disclosure p,
+.report-disclosure li {
+  color: var(--c-ink-soft);
+}
+
+.report-disclosure p {
+  margin: 0 0 8px;
+}
+
+.report-disclosure p:last-child {
+  margin-bottom: 0;
+}
+
+.report-disclosure ul {
+  margin: 0 0 8px;
   padding-left: 1.3em;
 }
 
